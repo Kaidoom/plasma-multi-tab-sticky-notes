@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
 # SPDX-License-Identifier: BSD-2-Clause
 cmake_minimum_required(VERSION 3.22)
-project(plasma-sticky-note-tabs VERSION 0.3.0 LANGUAGES CXX)
+project(plasma-sticky-note-tabs VERSION 0.3.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

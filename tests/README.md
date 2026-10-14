@@ -16,7 +16,9 @@ compiled applet through Plasma's real plugin loader and QML engine. Coverage
 includes rich text, Unicode, links, both paste modes, double-click renaming,
 keyboard navigation, drag reordering on desktop and panel popups, edge scrolling,
 drag cancellation, rapid switching, undo/redo isolation, cursor restoration,
-lazy editor creation, confirmation for unvisited nonempty tabs, recovery,
+lazy editor creation, confirmation for unvisited nonempty tabs, repeated inline
+confirmations without additional windows, narrow confirmation layouts, cancellation
+on Escape/hide/panel collapse/widget recreation, recovery,
 reordering with pending edits and unopened tabs, order persistence,
 widget duplication with pending edits, narrow layouts, overflow, the panel
 popup, baseline migration, invalid metadata, external write conflicts and

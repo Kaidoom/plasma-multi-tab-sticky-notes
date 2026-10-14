@@ -258,10 +258,10 @@ private Q_SLOTS:
         QVERIFY(h.run(u"tabModel.hasText("_s + quoted(first) + u")"_s).toBool());
         QCOMPARE(visualItems(h.item->fullRepresentationItem(), u"noteTextArea"_s).size(), 1);
         h.run(u"requestClose("_s + quoted(first) + u")"_s);
-        QVERIFY(h.run(u"closeDialog.visible"_s).toBool());
-        h.run(u"closeDialog.reject()"_s);
+        QCOMPARE(h.run(u"pendingCloseId"_s).toString(), first);
+        h.run(u"cancelClose()"_s);
         QCOMPARE(h.count(), 2);
-        QVERIFY(h.run(u"tabModel.closeTab("_s + quoted(first) + u")"_s).toBool());
+        h.run(u"requestClose("_s + quoted(first) + u"); confirmClose()"_s);
         QCOMPARE(h.count(), 1);
         QCOMPARE(plain(stored(first)), u"unvisited after restart"_s);
         QVERIFY(h.run(u"tabModel.recoverNote("_s + quoted(first) + u")"_s).toBool());
@@ -274,6 +274,167 @@ private Q_SLOTS:
         QCOMPARE(h.count(), 1);
         QVERIFY(h.id() != second);
         QVERIFY(!stored(recovered).isEmpty());
+    }
+
+    void inlineCloseConfirmation_data()
+    {
+        QTest::addColumn<bool>("panel");
+        QTest::addColumn<bool>("narrow");
+        QTest::newRow("desktop") << false << false;
+        QTest::newRow("narrow-desktop") << false << true;
+        QTest::newRow("panel-popup") << true << false;
+    }
+
+    void inlineCloseConfirmation()
+    {
+        QFETCH(bool, panel);
+        QFETCH(bool, narrow);
+        Harness h(panel);
+        h.load();
+        if (panel)
+            h.item->setExpanded(true);
+        QTRY_VERIFY(h.editor());
+        h.insert(u"Keep first Ω"_s);
+        const auto first = h.id();
+        h.run(u"addTab()"_s);
+        h.insert(u"Keep second 日本語"_s);
+        const auto second = h.id();
+        if (narrow) {
+            h.window.resize(150, 230);
+            h.item->setSize({ 150, 230 });
+        }
+        QTest::qWait(100);
+        auto *full = h.item->fullRepresentationItem();
+        auto *window = full->window();
+        QVERIFY(window);
+        const auto windows = QGuiApplication::topLevelWindows();
+        const auto overlays = visualItems(full, u"closeConfirmation"_s);
+        QCOMPARE(overlays.size(), 1);
+        auto *overlay = overlays.first();
+        const auto cancelButtons = visualItems(full, u"cancelCloseButton"_s);
+        const auto closeButtons = visualItems(full, u"confirmCloseButton"_s);
+        QCOMPARE(cancelButtons.size(), 1);
+        QCOMPARE(closeButtons.size(), 1);
+        auto *cancel = cancelButtons.first();
+        auto *close = closeButtons.first();
+        const auto click = [window](QQuickItem *button) {
+            QTest::mouseClick(window, Qt::LeftButton, Qt::NoModifier,
+                button->mapToScene(QPointF(button->width() / 2, button->height() / 2)).toPoint());
+        };
+        for (int i = 0; i < 3; ++i) {
+            h.run(u"requestClose("_s + quoted(first) + u")"_s);
+            QTRY_VERIFY(overlay->isVisible());
+            QTRY_VERIFY(cancel->hasActiveFocus());
+            QVERIFY(!h.editor()->isEnabled());
+            QCOMPARE(overlay->window(), window);
+            QCOMPARE(QGuiApplication::topLevelWindows().size(), windows.size());
+            QVERIFY(!QGuiApplication::modalWindow());
+            // Only this note is blocked, and a second request cannot replace
+            // the note ID whose closure is awaiting confirmation.
+            h.run(u"requestClose("_s + quoted(second) + u")"_s);
+            h.run(u"addTab(); navigate(1)"_s);
+            QCOMPARE(h.run(u"pendingCloseId"_s).toString(), first);
+            QCOMPARE(h.id(), second);
+            QCOMPARE(h.count(), 2);
+            const auto bounds = overlay->boundingRect();
+            QVERIFY(bounds.contains(cancel->mapRectToItem(overlay, cancel->boundingRect())));
+            QVERIFY(bounds.contains(close->mapRectToItem(overlay, close->boundingRect())));
+            if (i == 0) {
+                if (const auto path = qEnvironmentVariable("TABBEDNOTES_CLOSE_SCREENSHOT"); !path.isEmpty())
+                    QVERIFY(window->grabWindow().save(path + u"-"_s + QString::fromLatin1(QTest::currentDataTag()) + u".png"_s));
+                QTest::keyClick(window, Qt::Key_Tab);
+                QTRY_VERIFY(close->hasActiveFocus());
+                QTest::keyClick(window, Qt::Key_Backtab, Qt::ShiftModifier);
+                QTRY_VERIFY(cancel->hasActiveFocus());
+                QTest::keyClick(window, Qt::Key_Escape);
+            } else {
+                click(cancel);
+            }
+            QTRY_VERIFY(!overlay->isVisible());
+            QCOMPARE(h.count(), 2);
+            QVERIFY(h.editor()->isEnabled());
+        }
+        // Repeated confirmations must close only the requested note and keep
+        // exactly one pair of buttons, with no native or window-wide dialog.
+        for (int i = 0; i < 4; ++i) {
+            h.run(u"addTab()"_s);
+            const auto closing = h.id();
+            const auto contents = u"Retained note "_s + QString::number(i);
+            h.insert(contents);
+            h.run(u"requestClose(tabModel.activeId)"_s);
+            QTRY_VERIFY(overlay->isVisible());
+            QTest::qWait(20);
+            QCOMPARE(visualItems(full, u"confirmCloseButton"_s).size(), 1);
+            QCOMPARE(visualItems(full, u"cancelCloseButton"_s).size(), 1);
+            click(close);
+            QTRY_VERIFY(!overlay->isVisible());
+            QCOMPARE(h.count(), 2);
+            QCOMPARE(plain(stored(closing)), contents);
+        }
+        QCOMPARE(plain(stored(first)), u"Keep first Ω"_s);
+        QCOMPARE(plain(stored(second)), u"Keep second 日本語"_s);
+        h.run(u"requestClose("_s + quoted(first) + u")"_s);
+        click(close);
+        QCOMPARE(h.count(), 1);
+        QCOMPARE(h.id(), second);
+        h.run(u"requestClose("_s + quoted(second) + u")"_s);
+        click(close);
+        QCOMPARE(h.count(), 1);
+        QVERIFY(h.id() != second);
+        QVERIFY(plain(h.editor()->property("text").toString()).isEmpty());
+        h.run(u"requestClose(tabModel.activeId)"_s);
+        QVERIFY(!overlay->isVisible()); // Empty notes still close immediately.
+        QCOMPARE(h.count(), 1);
+        QCOMPARE(plain(stored(first)), u"Keep first Ω"_s);
+        QCOMPARE(plain(stored(second)), u"Keep second 日本語"_s);
+    }
+
+    void hiddenCloseConfirmationIsCancelled_data()
+    {
+        QTest::addColumn<bool>("panel");
+        QTest::newRow("desktop") << false;
+        QTest::newRow("panel-popup") << true;
+    }
+
+    void hiddenCloseConfirmationIsCancelled()
+    {
+        QFETCH(bool, panel);
+        Harness h(panel);
+        h.load();
+        if (panel)
+            h.item->setExpanded(true);
+        QTRY_VERIFY(h.editor());
+        h.insert(u"Keep pending close"_s);
+        const auto first = h.id();
+        h.run(u"addTab()"_s);
+        h.insert(u"Other tab"_s);
+        h.run(u"requestClose("_s + quoted(first) + u")"_s);
+        QCOMPARE(h.run(u"pendingCloseId"_s).toString(), first);
+        if (panel)
+            h.item->setExpanded(false);
+        else
+            h.window.hide();
+        QTRY_VERIFY(h.run(u"pendingCloseId"_s).toString().isEmpty());
+        h.run(u"confirmClose()"_s); // A stale acceptance cannot close anything.
+        QCOMPARE(h.count(), 2);
+        if (panel)
+            h.item->setExpanded(true);
+        else
+            h.window.show();
+        QTRY_VERIFY(h.item->fullRepresentationItem()->isVisible());
+        QVERIFY(h.run(u"pendingCloseId"_s).toString().isEmpty());
+        h.run(u"requestClose("_s + quoted(first) + u")"_s);
+        QCOMPARE(h.run(u"pendingCloseId"_s).toString(), first);
+        h.reload(); // Destruction/recreation must never commit a pending close.
+        if (panel)
+            h.item->setExpanded(true);
+        QTRY_VERIFY(h.editor());
+        QVERIFY(h.run(u"pendingCloseId"_s).toString().isEmpty());
+        QCOMPARE(h.count(), 2);
+        QCOMPARE(plain(stored(first)), u"Keep pending close"_s);
+        const auto overlays = visualItems(h.item->fullRepresentationItem(), u"closeConfirmation"_s);
+        QCOMPARE(overlays.size(), 1);
+        QVERIFY(!overlays.first()->isVisible());
     }
 
     void duplicationIncludesUnvisitedAndPendingEdits()

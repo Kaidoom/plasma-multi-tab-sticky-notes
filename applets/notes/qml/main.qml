@@ -10,7 +10,6 @@ import QtQuick
 import QtQuick.Controls as QQC2 // just for desktop-styled context menus
 import QtQuick.Layouts
 import QtQuick.Window
-import QtQuick.Dialogs
 
 import org.kde.draganddrop as DragDrop
 
@@ -59,6 +58,8 @@ PlasmoidItem {
 
 
     property string storageError: ""
+    property string pendingCloseId: ""
+    onExpandedChanged: if (!expanded) pendingCloseId = ""
     function updateStorageError() {
         storageError = activeEditor?.note.error || tabModel.error;
     }
@@ -79,6 +80,7 @@ PlasmoidItem {
     }
 
     function prepareSwitch() {
+        if (pendingCloseId) return false;
         Qt.inputMethod.commit();
         return !activeEditor || activeEditor.flush();
     }
@@ -92,7 +94,9 @@ PlasmoidItem {
         if (prepareSwitch() && tabModel.addTab()) focusEditor();
     }
     function focusEditor() {
-        Qt.callLater(() => { if (mainTextArea) mainTextArea.forceActiveFocus(); });
+        Qt.callLater(() => {
+            if (mainTextArea && !pendingCloseId && fullRepresentationItem?.visible) mainTextArea.forceActiveFocus();
+        });
     }
     function flushEditors() {
         Qt.inputMethod.commit();
@@ -100,17 +104,26 @@ PlasmoidItem {
         return tabModel.flushAll();
     }
     function requestClose(id) {
-        if (!prepareSwitch()) return;
+        if (!fullRepresentationItem?.visible || !prepareSwitch()) return;
         if (tabModel.hasText(id)) {
-            closeDialog.noteId = id;
-            closeDialog.open();
+            pendingCloseId = id;
         } else {
             tabModel.closeTab(id);
             focusEditor();
         }
     }
+    function cancelClose() {
+        pendingCloseId = "";
+        focusEditor();
+    }
+    function confirmClose() {
+        const id = pendingCloseId;
+        pendingCloseId = "";
+        if (id) tabModel.closeTab(id);
+        focusEditor();
+    }
     onExternalData: (mimetype, data) => {
-        if (!mainTextArea) return;
+        if (!mainTextArea || pendingCloseId) return;
         const contents = NotesHelper.fileContents(data) || data;
         mainTextArea.text = String(contents).replace(/\n/g, "<br>");
         mainTextArea.cursorPosition = mainTextArea.length;
@@ -119,23 +132,14 @@ PlasmoidItem {
     Connections {
         target: Plasmoid
         function onActivated() { root.focusEditor(); }
-        function onDestroyedChanged(destroyed) { if (destroyed) root.flushEditors(); }
-    }
-    Component.onDestruction: tabModel.flushAll()
-
-    MessageDialog {
-        id: closeDialog
-        property string noteId
-        title: i18n("Close this tab?")
-        text: i18n("The note contains text. Its file will be kept and can be recovered from the widget menu.")
-        buttons: MessageDialog.Discard | MessageDialog.Cancel
-        onButtonClicked: (button, role) => {
-            if (button === MessageDialog.Discard) {
-                tabModel.closeTab(noteId);
-                root.focusEditor();
+        function onDestroyedChanged(destroyed) {
+            if (destroyed) {
+                root.pendingCloseId = "";
+                root.flushEditors();
             }
         }
     }
+    Component.onDestruction: tabModel.flushAll()
 
     preloadFullRepresentation: true
     fullRepresentation: KSvg.SvgItem {
@@ -152,8 +156,16 @@ PlasmoidItem {
         Layout.minimumHeight: root.inPanel && !root.compactInPanel ? -1 : Kirigami.Units.gridUnit * 5
         imagePath: root.noBackground ? "" : "widgets/notes"
         elementId: Plasmoid.configuration.color + "-notes"
+        onVisibleChanged: if (!visible) root.pendingCloseId = ""
+        Connections {
+            target: backgroundItem.Window.window
+            function onVisibilityChanged(visibility) {
+                if (visibility === Window.Hidden || visibility === Window.Minimized) root.pendingCloseId = "";
+            }
+        }
 
         ColumnLayout {
+            enabled: !root.pendingCloseId
             anchors {
                 fill: parent
                 leftMargin: root.noBackground ? 0 : root.horizontalMargins
@@ -192,6 +204,91 @@ PlasmoidItem {
                             note: tabModel.noteForId(parent.noteId)
                             tabs: tabModel
                             appletRoot: root
+                        }
+                    }
+                }
+            }
+        }
+
+        // An item inside this note, not a window-wide modal popup.
+        FocusScope {
+            id: closeConfirmation
+            objectName: "closeConfirmation"
+            anchors.fill: parent
+            clip: true
+            visible: root.pendingCloseId.length > 0
+            onVisibleChanged: {
+                if (visible) {
+                    confirmationScroll.contentItem.contentY = 0;
+                    cancelCloseButton.forceActiveFocus(Qt.PopupFocusReason);
+                }
+            }
+            Accessible.role: Accessible.Dialog
+            Accessible.name: i18n("Close this tab?")
+            Keys.onEscapePressed: root.cancelClose()
+            Rectangle {
+                anchors.fill: parent
+                color: "#60000000"
+            }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.AllButtons
+                onClicked: root.cancelClose()
+                onWheel: event => { event.accepted = true; }
+            }
+            PlasmaComponents3.Pane {
+                anchors.centerIn: parent
+                width: Math.max(0, Math.min(parent.width - Kirigami.Units.largeSpacing, Kirigami.Units.gridUnit * 18))
+                height: Math.min(implicitHeight, Math.max(0, parent.height - Kirigami.Units.largeSpacing))
+                implicitHeight: confirmationContent.implicitHeight + topPadding + bottomPadding
+                padding: Kirigami.Units.largeSpacing
+                background: Rectangle {
+                    color: Kirigami.Theme.backgroundColor
+                    radius: Kirigami.Units.cornerRadius
+                }
+                contentItem: ColumnLayout {
+                    id: confirmationContent
+                    spacing: Kirigami.Units.largeSpacing
+                    PlasmaComponents3.Label {
+                        Layout.fillWidth: true
+                        text: i18n("Close this tab?")
+                        font.bold: true
+                        wrapMode: Text.WordWrap
+                    }
+                    PlasmaComponents3.ScrollView {
+                        id: confirmationScroll
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.minimumHeight: 0
+                        Layout.preferredHeight: confirmationText.implicitHeight
+                        contentWidth: availableWidth
+                        PlasmaComponents3.Label {
+                            id: confirmationText
+                            width: confirmationScroll.availableWidth
+                            text: i18n("The note contains text. You can recover it later from the widget menu.")
+                            wrapMode: Text.WordWrap
+                        }
+                    }
+                    GridLayout {
+                        Layout.fillWidth: true
+                        columns: width >= cancelCloseButton.implicitWidth + confirmCloseButton.implicitWidth + columnSpacing ? 2 : 1
+                        PlasmaComponents3.Button {
+                            id: cancelCloseButton
+                            objectName: "cancelCloseButton"
+                            Layout.fillWidth: true
+                            text: i18n("Cancel")
+                            onClicked: root.cancelClose()
+                            KeyNavigation.tab: confirmCloseButton
+                            KeyNavigation.backtab: confirmCloseButton
+                        }
+                        PlasmaComponents3.Button {
+                            id: confirmCloseButton
+                            objectName: "confirmCloseButton"
+                            Layout.fillWidth: true
+                            text: i18n("Close tab")
+                            onClicked: root.confirmClose()
+                            KeyNavigation.tab: cancelCloseButton
+                            KeyNavigation.backtab: cancelCloseButton
                         }
                     }
                 }

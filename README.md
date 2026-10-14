@@ -19,7 +19,8 @@ with separate notes in a compact tab bar.
 - Restore notes, tab order and the active tab after restarting Plasma.
 - Recover closed notes; retain note files when a widget or the package is removed.
 
-Double-click a title to rename it. Closing a nonempty tab asks for confirmation.
+Double-click a title to rename it. Closing a nonempty tab asks for confirmation
+inside the widget. Hiding or closing the widget cancels a pending tab closure.
 The fork uses its own plugin ID, `dev.kaidoom.tabbednotes`, and does not replace
 KDE's original Sticky Note.
 
@@ -63,7 +64,7 @@ Build the Fedora RPM from the current Git commit, then install it:
 
 ```sh
 ./tools/build-rpm.sh
-sudo dnf install ./dist/plasma-sticky-note-tabs-0.3.0-2.*.rpm
+sudo dnf install ./dist/plasma-sticky-note-tabs-0.3.1-1.*.rpm
 ```
 
 The RPM installs into Fedora's standard Qt plugin directory

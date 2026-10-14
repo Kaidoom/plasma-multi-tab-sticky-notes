@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
 # SPDX-License-Identifier: BSD-2-Clause
 Name:           plasma-sticky-note-tabs
-Version:        0.3.0
-Release:        2%{?dist}
+Version:        0.3.1
+Release:        1%{?dist}
 Summary:        Plasma Tabbed Notes, a KDE Plasma 6 sticky note widget with tabs
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND LGPL-2.0-or-later AND BSD-3-Clause AND BSD-2-Clause AND CC0-1.0 AND (GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL) AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL)
 URL:            https://github.com/Kaidoom/plasma-multi-tab-sticky-notes
@@ -45,5 +45,8 @@ and separate note storage. KDE's original Sticky Note remains available.
 %license %{_datadir}/licenses/plasma-sticky-note-tabs/
 
 %changelog
+* Wed Oct 14 2026 Plasma Tabbed Notes contributors - 0.3.1-1
+- Confirm tab closure inside the widget and cancel pending closure when hidden.
+
 * Wed Oct 14 2026 Plasma Tabbed Notes contributors - 0.3.0-2
 - Package public release documentation, attribution and preview.
