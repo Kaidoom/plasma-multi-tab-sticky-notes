@@ -45,9 +45,10 @@ and the KF6 Kirigami, KDeclarative and KCMUtils QML runtime modules.
 - **Build/install tested:** Arch container with libplasma 6.7.5, Qt 6.12.0 and
   Frameworks 6.31.0, including Qt plugin discovery and uninstall. Desktop runtime
   is untested.
-- **Expected compatibility:** Linux distributions meeting the requirements above,
-  including Arch, Debian, Ubuntu and openSUSE. Package availability varies by
-  release; full desktop testing outside Fedora is still pending.
+- **Other distributions:** Source builds may work on distributions providing
+  Plasma 6.7+, Qt 6.10+ and KDE Frameworks 6.26+. Compatibility depends on the
+  distribution release and has not been verified outside the environments listed
+  above.
 
 ## Build from source
 
