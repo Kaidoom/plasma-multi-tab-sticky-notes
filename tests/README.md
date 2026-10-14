@@ -17,7 +17,8 @@ lazy editor creation, confirmation for unvisited nonempty tabs, recovery,
 widget duplication with pending edits, narrow layouts, overflow, the panel
 popup, baseline migration, invalid metadata, external write conflicts and
 coexistence with KDE's original Notes applet. Clipboard contents are restored
-after the paste test.
+after the paste test. Clipboard setup and paste-key dispatch happen in one
+event-loop turn to avoid Wayland selection ownership races with synthetic input.
 
 The storage test injects a short-write failure with a process-local file-size
 limit. It verifies that the original file survives, the draft stays dirty, and

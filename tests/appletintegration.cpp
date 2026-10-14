@@ -12,6 +12,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QKeyEvent>
 #include <QMimeData>
 #include <QProcess>
 #include <QQmlContext>
@@ -148,6 +149,7 @@ private Q_SLOTS:
         Harness h;
         h.load();
         QVERIFY2(!h.applet->failedToLaunch(), qPrintable(h.applet->launchErrorMessage()));
+        qInfo() << "Loaded plugin:" << h.applet->pluginMetaData().fileName();
         QVERIFY(QFile::exists(u":/qt/qml/plasma/applet/dev/kaidoom/tabbednotes/main.qml"_s));
         QVERIFY2(h.model()->property("ready").toBool(), qPrintable(h.model()->property("error").toString()));
         QTRY_VERIFY(h.editor());
@@ -335,13 +337,16 @@ private Q_SLOTS:
         evaluate(h.editor(), u"paste()"_s);
         QVERIFY(h.editor()->property("text").toString().contains(u"font-weight:700"));
         QVERIFY(h.editor()->property("text").toString().contains(u"https://kde.org"));
-        QApplication::clipboard()->setText(u" <tag> & 日本語\nline two"_s);
-        h.window.requestActivate();
-        QCoreApplication::processEvents();
         h.editor()->forceActiveFocus();
-        QTRY_COMPARE(h.window.activeFocusItem(), h.editor());
-        QTRY_COMPARE(QApplication::clipboard()->text(), u" <tag> & 日本語\nline two"_s);
-        QTest::keyClick(&h.window, Qt::Key_V, Qt::ControlModifier);
+        QCOMPARE(h.window.activeFocusItem(), h.editor());
+        // Keep setup and dispatch in one event-loop turn. Synthetic QtTest keys
+        // otherwise yield to Wayland, which may reject selection ownership when
+        // this test window has no compositor-issued input serial.
+        QApplication::clipboard()->setText(u" <tag> & 日本語\nline two"_s);
+        QKeyEvent press(QEvent::KeyPress, Qt::Key_V, Qt::ControlModifier);
+        QKeyEvent release(QEvent::KeyRelease, Qt::Key_V, Qt::ControlModifier);
+        QCoreApplication::sendEvent(&h.window, &press);
+        QCoreApplication::sendEvent(&h.window, &release);
         QVERIFY(plain(h.editor()->property("text").toString()).contains(u"<tag> & 日本語"));
         h.editor()->setProperty("cursorPosition", 3);
         h.run(u"addTab()"_s);
