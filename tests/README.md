@@ -34,6 +34,20 @@ byte-for-byte intact. Output is in `build/plasma-smoke/`. The live desktop and
 its service configuration are untouched. This exercises a fresh Plasma session;
 it does not log the user out of their desktop.
 
-To test an extracted/relocated RPM, pass its Qt plugin directory with
-`--plugin-root`. The integration executable can likewise use that directory
-in its process-local `QT_PLUGIN_PATH`.
+To test an extracted/relocated RPM, pass its Qt plugin directory to the smoke
+test with `--plugin-root`.
+
+For the integration executable, first copy it out of `build/bin`: Qt searches
+beside the executable before other plugin directories. Otherwise a test may
+load the development plugin even when `QT_PLUGIN_PATH` is unset.
+
+```sh
+mkdir -p build/installed-test-runner
+cp build/bin/applet-integration build/installed-test-runner/
+env -u QT_PLUGIN_PATH QT_QPA_PLATFORM=wayland \
+  build/installed-test-runner/applet-integration -v1
+```
+
+For a relocated RPM, set `QT_PLUGIN_PATH` to its Qt plugin directory instead.
+The first integration case prints the exact loaded plugin path; check that it
+matches the intended installation.
