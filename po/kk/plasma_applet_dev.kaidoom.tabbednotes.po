@@ -1,0 +1,318 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sairan Kikkarin <sairan@computer.org>, 2010, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"PO-Revision-Date: 2011-08-03 07:19+0600\n"
+"Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
+"Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
+"Language: kk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.1\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: qml/config.qml:13
+#, kde-format
+msgctxt "@title"
+msgid "Appearance"
+msgstr ""
+
+#: qml/configAppearance.qml:36
+#, kde-format
+msgid "%1pt"
+msgstr ""
+
+#: qml/configAppearance.qml:42
+#, fuzzy, kde-format
+#| msgid "Use custom font size:"
+msgid "Text font size:"
+msgstr "Қалаған қаріп өлшемі:"
+
+#: qml/configAppearance.qml:73
+#, kde-format
+msgid "A white sticky note"
+msgstr ""
+
+#: qml/configAppearance.qml:74
+#, kde-format
+msgid "A black sticky note"
+msgstr ""
+
+#: qml/configAppearance.qml:75
+#, kde-format
+msgid "A red sticky note"
+msgstr ""
+
+#: qml/configAppearance.qml:76
+#, kde-format
+msgid "An orange sticky note"
+msgstr ""
+
+#: qml/configAppearance.qml:77
+#, kde-format
+msgid "A yellow sticky note"
+msgstr ""
+
+#: qml/configAppearance.qml:78
+#, kde-format
+msgid "A green sticky note"
+msgstr ""
+
+#: qml/configAppearance.qml:79
+#, kde-format
+msgid "A blue sticky note"
+msgstr ""
+
+#: qml/configAppearance.qml:80
+#, kde-format
+msgid "A pink sticky note"
+msgstr ""
+
+#: qml/configAppearance.qml:81
+#, kde-format
+msgid "A transparent sticky note"
+msgstr ""
+
+#: qml/configAppearance.qml:82
+#, kde-format
+msgid "A transparent sticky note with light text"
+msgstr ""
+
+#: qml/main.qml:294
+#, kde-format
+msgid "Undo"
+msgstr ""
+
+#: qml/main.qml:302
+#, kde-format
+msgid "Redo"
+msgstr ""
+
+#: qml/main.qml:312
+#, kde-format
+msgid "Cut"
+msgstr ""
+
+#: qml/main.qml:320
+#, kde-format
+msgid "Copy"
+msgstr ""
+
+#: qml/main.qml:328
+#, kde-format
+msgid "Paste"
+msgstr ""
+
+#: qml/main.qml:334
+#, kde-format
+msgid "Paste with Full Formatting"
+msgstr ""
+
+#: qml/main.qml:341
+#, fuzzy, kde-format
+#| msgid "Formatting"
+msgctxt "@action:inmenu"
+msgid "Remove Formatting"
+msgstr "Пішімдеу"
+
+#: qml/main.qml:356
+#, kde-format
+msgid "Delete"
+msgstr ""
+
+#: qml/main.qml:363
+#, kde-format
+msgid "Clear"
+msgstr ""
+
+#: qml/main.qml:373
+#, kde-format
+msgid "Select All"
+msgstr ""
+
+#: qml/main.qml:505
+#, fuzzy, kde-format
+#| msgid "Bold"
+msgctxt "@info:tooltip"
+msgid "Bold"
+msgstr "Қалың"
+
+#: qml/main.qml:518
+#, fuzzy, kde-format
+#| msgid "Italic"
+msgctxt "@info:tooltip"
+msgid "Italic"
+msgstr "Көлбеу"
+
+#: qml/main.qml:531
+#, fuzzy, kde-format
+#| msgid "Underline"
+msgctxt "@info:tooltip"
+msgid "Underline"
+msgstr "Асты сызық"
+
+#: qml/main.qml:544
+#, fuzzy, kde-format
+#| msgid "StrikeOut"
+msgctxt "@info:tooltip"
+msgid "Strikethrough"
+msgstr "Сызып тастаған"
+
+#: qml/main.qml:618
+#, kde-format
+msgctxt "@action:button pin popup for panel widget"
+msgid "Keep Open"
+msgstr ""
+
+#: qml/main.qml:647
+#, kde-format
+msgid "Discard this note?"
+msgstr ""
+
+#: qml/main.qml:648
+#, kde-format
+msgid "Are you sure you want to discard this note?"
+msgstr ""
+
+#: qml/main.qml:673
+#, fuzzy, kde-format
+#| msgid "White"
+msgctxt "@item:inmenu"
+msgid "White"
+msgstr "Ақ"
+
+#: qml/main.qml:674
+#, fuzzy, kde-format
+#| msgid "Black"
+msgctxt "@item:inmenu"
+msgid "Black"
+msgstr "Қара"
+
+#: qml/main.qml:675
+#, fuzzy, kde-format
+#| msgid "Red"
+msgctxt "@item:inmenu"
+msgid "Red"
+msgstr "Қызыл"
+
+#: qml/main.qml:676
+#, fuzzy, kde-format
+#| msgid "Orange"
+msgctxt "@item:inmenu"
+msgid "Orange"
+msgstr "Қызғылт сары"
+
+#: qml/main.qml:677
+#, fuzzy, kde-format
+#| msgid "Yellow"
+msgctxt "@item:inmenu"
+msgid "Yellow"
+msgstr "Сары"
+
+#: qml/main.qml:678
+#, fuzzy, kde-format
+#| msgid "Green"
+msgctxt "@item:inmenu"
+msgid "Green"
+msgstr "Жасыл"
+
+#: qml/main.qml:679
+#, fuzzy, kde-format
+#| msgid "Blue"
+msgctxt "@item:inmenu"
+msgid "Blue"
+msgstr "Көк"
+
+#: qml/main.qml:680
+#, fuzzy, kde-format
+#| msgid "Pink"
+msgctxt "@item:inmenu"
+msgid "Pink"
+msgstr "Қызғылт"
+
+#: qml/main.qml:681
+#, fuzzy, kde-format
+#| msgid "Translucent"
+msgctxt "@item:inmenu"
+msgid "Transparent"
+msgstr "Мөлдір"
+
+#: qml/main.qml:685
+#, fuzzy, kde-format
+#| msgid "Translucent"
+msgctxt "@item:inmenu"
+msgid "Transparent Light"
+msgstr "Мөлдір"
+
+#, fuzzy
+#~| msgid "Justify center"
+#~ msgid "Align center"
+#~ msgstr "Ортаға туралау"
+
+#, fuzzy
+#~| msgid "Justify"
+#~ msgid "Justified"
+#~ msgstr "Ені бойынша"
+
+#~ msgid "Font"
+#~ msgstr "Қаріп"
+
+#~ msgid "Style:"
+#~ msgstr "Стилі:"
+
+#~ msgid "&Bold"
+#~ msgstr "Қ&алың"
+
+#~ msgid "&Italic"
+#~ msgstr "&Көлбеу"
+
+#~ msgid "Size:"
+#~ msgstr "Өлшемі:"
+
+#~ msgid "Scale font size by:"
+#~ msgstr "Масштабтауы:"
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#~ msgid "Color:"
+#~ msgstr "Түсі:"
+
+#~ msgid "Use theme color"
+#~ msgstr "Нақышына сай болсын"
+
+#~ msgid "Use custom color:"
+#~ msgstr "Қалаған түс:"
+
+#~ msgid "Active line highlight color:"
+#~ msgstr "Назардағы жолды белгілеу түсі:"
+
+#~ msgid "Use no color"
+#~ msgstr "Керегі жоқ"
+
+#~ msgid "Theme"
+#~ msgstr "Нақышы"
+
+#~ msgid "Notes color:"
+#~ msgstr "Парағының түсі:"
+
+#~ msgid "Spell Check"
+#~ msgstr "Емлесін тексеру"
+
+#~ msgid "Enable spell check:"
+#~ msgstr "Емле тексеруі болсын"
+
+#~ msgid "Notes Color"
+#~ msgstr "Парақтың түсі"
+
+#~ msgid "General"
+#~ msgstr "Жалпы"
+
+#~ msgid "Unable to open file"
+#~ msgstr "Файл ашылмайды"

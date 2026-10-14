@@ -1,0 +1,318 @@
+# translation of plasma_applet_notes.po to Italian
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Dario Panico <Dareus_Persarumrex@fastwebnet.it>, 2008.
+# SPDX-FileCopyrightText: 2015, 2018, 2019, 2021, 2022, 2023, 2025 Vincenzo Reale <smart2128vr@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: plasma_applet_notes\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"PO-Revision-Date: 2025-04-05 18:03+0200\n"
+"Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
+"Language-Team: Italian <kde-i18n-it@kde.org>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 24.12.3\n"
+
+#: qml/config.qml:13
+#, kde-format
+msgctxt "@title"
+msgid "Appearance"
+msgstr "Aspetto"
+
+#: qml/configAppearance.qml:36
+#, kde-format
+msgid "%1pt"
+msgstr "%1pt"
+
+#: qml/configAppearance.qml:42
+#, kde-format
+msgid "Text font size:"
+msgstr "Dimensione del carattere del testo:"
+
+#: qml/configAppearance.qml:73
+#, kde-format
+msgid "A white sticky note"
+msgstr "Una nota adesiva bianca"
+
+#: qml/configAppearance.qml:74
+#, kde-format
+msgid "A black sticky note"
+msgstr "Una nota adesiva nera"
+
+#: qml/configAppearance.qml:75
+#, kde-format
+msgid "A red sticky note"
+msgstr "Una nota adesiva rossa"
+
+#: qml/configAppearance.qml:76
+#, kde-format
+msgid "An orange sticky note"
+msgstr "Una nota adesiva arancione"
+
+#: qml/configAppearance.qml:77
+#, kde-format
+msgid "A yellow sticky note"
+msgstr "Una nota adesiva gialla"
+
+#: qml/configAppearance.qml:78
+#, kde-format
+msgid "A green sticky note"
+msgstr "Una nota adesiva verde"
+
+#: qml/configAppearance.qml:79
+#, kde-format
+msgid "A blue sticky note"
+msgstr "Una nota adesiva blu"
+
+#: qml/configAppearance.qml:80
+#, kde-format
+msgid "A pink sticky note"
+msgstr "Una nota adesiva rosa"
+
+#: qml/configAppearance.qml:81
+#, kde-format
+msgid "A transparent sticky note"
+msgstr "Una nota adesiva trasparente"
+
+#: qml/configAppearance.qml:82
+#, kde-format
+msgid "A transparent sticky note with light text"
+msgstr "Una nota adesiva trasparente con testo chiaro"
+
+#: qml/main.qml:294
+#, kde-format
+msgid "Undo"
+msgstr "Annulla"
+
+#: qml/main.qml:302
+#, kde-format
+msgid "Redo"
+msgstr "Rifai"
+
+#: qml/main.qml:312
+#, kde-format
+msgid "Cut"
+msgstr "Taglia"
+
+#: qml/main.qml:320
+#, kde-format
+msgid "Copy"
+msgstr "Copia"
+
+#: qml/main.qml:328
+#, kde-format
+msgid "Paste"
+msgstr "Incolla"
+
+#: qml/main.qml:334
+#, kde-format
+msgid "Paste with Full Formatting"
+msgstr "Incolla con formattazione completa"
+
+#: qml/main.qml:341
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Remove Formatting"
+msgstr "Rimuovi formattazione"
+
+#: qml/main.qml:356
+#, kde-format
+msgid "Delete"
+msgstr "Elimina"
+
+#: qml/main.qml:363
+#, kde-format
+msgid "Clear"
+msgstr "Cancella"
+
+#: qml/main.qml:373
+#, kde-format
+msgid "Select All"
+msgstr "Seleziona tutto"
+
+#: qml/main.qml:505
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Bold"
+msgstr "Grassetto"
+
+#: qml/main.qml:518
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Italic"
+msgstr "Corsivo"
+
+#: qml/main.qml:531
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Underline"
+msgstr "Sottolineato"
+
+#: qml/main.qml:544
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Strikethrough"
+msgstr "Barrato"
+
+#: qml/main.qml:618
+#, kde-format
+msgctxt "@action:button pin popup for panel widget"
+msgid "Keep Open"
+msgstr "Tieni aperto"
+
+#: qml/main.qml:647
+#, kde-format
+msgid "Discard this note?"
+msgstr "Vuoi scartare questa nota?"
+
+#: qml/main.qml:648
+#, kde-format
+msgid "Are you sure you want to discard this note?"
+msgstr "Sei sicuro di voler scartare questa nota?"
+
+#: qml/main.qml:673
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "White"
+msgstr "Bianco"
+
+#: qml/main.qml:674
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Black"
+msgstr "Nero"
+
+#: qml/main.qml:675
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Red"
+msgstr "Rosso"
+
+#: qml/main.qml:676
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Orange"
+msgstr "Arancione"
+
+#: qml/main.qml:677
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Yellow"
+msgstr "Giallo"
+
+#: qml/main.qml:678
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Green"
+msgstr "Verde"
+
+#: qml/main.qml:679
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Blue"
+msgstr "Blu"
+
+#: qml/main.qml:680
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Pink"
+msgstr "Rosa"
+
+#: qml/main.qml:681
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Transparent"
+msgstr "Trasparente"
+
+#: qml/main.qml:685
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Transparent Light"
+msgstr "Trasparente chiaro"
+
+#~ msgid "Background color"
+#~ msgstr "Colore di sfondo"
+
+#~ msgid "Toggle text format options"
+#~ msgstr "Commuta le opzioni di formato del testo"
+
+#~ msgid "Notes Settings..."
+#~ msgstr "Impostazioni delle note..."
+
+#~ msgid "Align left"
+#~ msgstr "Allineato a sinistra"
+
+#~ msgid "Align center"
+#~ msgstr "Allineato al centro"
+
+#~ msgid "Align right"
+#~ msgstr "Allineato a destra"
+
+#~ msgid "Justified"
+#~ msgstr "Giustificato"
+
+#~ msgid "Font"
+#~ msgstr "Carattere"
+
+#~ msgid "Style:"
+#~ msgstr "Stile:"
+
+#~ msgid "&Bold"
+#~ msgstr "&Grassetto"
+
+#~ msgid "&Italic"
+#~ msgstr "&Corsivo"
+
+#~ msgid "Size:"
+#~ msgstr "Dimensione"
+
+#~ msgid "Scale font size by:"
+#~ msgstr "Ridimensiona il carattere al:"
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#~ msgid "Color:"
+#~ msgstr "Colore:"
+
+#~ msgid "Use theme color"
+#~ msgstr "Usa colore del tema"
+
+#~ msgid "Use custom color:"
+#~ msgstr "Usa colore personalizzato:"
+
+#~ msgid "Active line highlight color:"
+#~ msgstr "Coloree di evidenziazione della riga attiva:"
+
+#~ msgid "Use no color"
+#~ msgstr "Non utilizzare colori"
+
+#~ msgid "Theme"
+#~ msgstr "Tema"
+
+#~ msgid "Notes color:"
+#~ msgstr "Colore delle annotazioni:"
+
+#~ msgid "Spell Check"
+#~ msgstr "Controllo ortografico"
+
+#~ msgid "Enable spell check:"
+#~ msgstr "Abilita controllo ortografico"
+
+#~ msgid "Notes Color"
+#~ msgstr "Colore delle annotazioni"
+
+#~ msgid "General"
+#~ msgstr "Generale"
+
+#~ msgid "Unable to open file"
+#~ msgstr "Impossibile aprire il file"
+
+#~ msgid "Welcome to the Notes Plasmoid! Type your notes here..."
+#~ msgstr "Benvenuto nel plasmoide Note! Digita qui le tue annotazioni..."

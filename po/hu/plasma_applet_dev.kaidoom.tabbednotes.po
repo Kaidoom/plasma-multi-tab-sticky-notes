@@ -1,0 +1,307 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Tamas Szanto <tszanto@interware.hu>, 2008.
+# Kristóf Kiszel <ulysses@kubuntu.org>, 2019.
+# SPDX-FileCopyrightText: 2024, 2025 Kristof Kiszel <ulysses@fsf.hu>
+msgid ""
+msgstr ""
+"Project-Id-Version: KDE 4.3\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"PO-Revision-Date: 2025-05-18 20:31+0200\n"
+"Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
+"Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 25.04.1\n"
+
+#: qml/config.qml:13
+#, kde-format
+msgctxt "@title"
+msgid "Appearance"
+msgstr "Megjelenés"
+
+#: qml/configAppearance.qml:36
+#, kde-format
+msgid "%1pt"
+msgstr "%1 pt"
+
+#: qml/configAppearance.qml:42
+#, kde-format
+msgid "Text font size:"
+msgstr "Szöveg betűmérete:"
+
+#: qml/configAppearance.qml:73
+#, kde-format
+msgid "A white sticky note"
+msgstr "Fehér cetli"
+
+#: qml/configAppearance.qml:74
+#, kde-format
+msgid "A black sticky note"
+msgstr "Fekete cetli"
+
+#: qml/configAppearance.qml:75
+#, kde-format
+msgid "A red sticky note"
+msgstr "Piros cetli"
+
+#: qml/configAppearance.qml:76
+#, kde-format
+msgid "An orange sticky note"
+msgstr "Narancssárga cetli"
+
+#: qml/configAppearance.qml:77
+#, kde-format
+msgid "A yellow sticky note"
+msgstr "Sárga cetli"
+
+#: qml/configAppearance.qml:78
+#, kde-format
+msgid "A green sticky note"
+msgstr "Zöld cetli"
+
+#: qml/configAppearance.qml:79
+#, kde-format
+msgid "A blue sticky note"
+msgstr "Kék cetli"
+
+#: qml/configAppearance.qml:80
+#, kde-format
+msgid "A pink sticky note"
+msgstr "Rózsaszín cetli"
+
+#: qml/configAppearance.qml:81
+#, kde-format
+msgid "A transparent sticky note"
+msgstr "Átlátszó cetli"
+
+#: qml/configAppearance.qml:82
+#, kde-format
+msgid "A transparent sticky note with light text"
+msgstr "Átlátszó cetli világos szöveggel"
+
+#: qml/main.qml:294
+#, kde-format
+msgid "Undo"
+msgstr "Visszavonás"
+
+#: qml/main.qml:302
+#, kde-format
+msgid "Redo"
+msgstr "Újra"
+
+#: qml/main.qml:312
+#, kde-format
+msgid "Cut"
+msgstr "Kivágás"
+
+#: qml/main.qml:320
+#, kde-format
+msgid "Copy"
+msgstr "Másolás"
+
+#: qml/main.qml:328
+#, kde-format
+msgid "Paste"
+msgstr "Beillesztés"
+
+#: qml/main.qml:334
+#, kde-format
+msgid "Paste with Full Formatting"
+msgstr "Beillesztés teljes formázással"
+
+#: qml/main.qml:341
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Remove Formatting"
+msgstr "Formázás eltávolítása"
+
+#: qml/main.qml:356
+#, kde-format
+msgid "Delete"
+msgstr "Törlés"
+
+#: qml/main.qml:363
+#, kde-format
+msgid "Clear"
+msgstr "Tartalom törlése"
+
+#: qml/main.qml:373
+#, kde-format
+msgid "Select All"
+msgstr "Összes kijelölése"
+
+#: qml/main.qml:505
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Bold"
+msgstr "Félkövér"
+
+#: qml/main.qml:518
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Italic"
+msgstr "Dőlt"
+
+#: qml/main.qml:531
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Underline"
+msgstr "Aláhúzott"
+
+#: qml/main.qml:544
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Strikethrough"
+msgstr "Áthúzott"
+
+#: qml/main.qml:618
+#, kde-format
+msgctxt "@action:button pin popup for panel widget"
+msgid "Keep Open"
+msgstr "Tartsa nyitva"
+
+#: qml/main.qml:647
+#, kde-format
+msgid "Discard this note?"
+msgstr "Elveti ezt a jegyzetet?"
+
+#: qml/main.qml:648
+#, kde-format
+msgid "Are you sure you want to discard this note?"
+msgstr "Biztosan el szeretné vetni ezt a jegyzetet?"
+
+#: qml/main.qml:673
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "White"
+msgstr "Fehér"
+
+#: qml/main.qml:674
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Black"
+msgstr "Fekete"
+
+#: qml/main.qml:675
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Red"
+msgstr "Piros"
+
+#: qml/main.qml:676
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Orange"
+msgstr "Narancssárga"
+
+#: qml/main.qml:677
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Yellow"
+msgstr "Sárga"
+
+#: qml/main.qml:678
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Green"
+msgstr "Zöld"
+
+#: qml/main.qml:679
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Blue"
+msgstr "Kék"
+
+#: qml/main.qml:680
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Pink"
+msgstr "Rózsaszín"
+
+#: qml/main.qml:681
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Transparent"
+msgstr "Átlátszó"
+
+#: qml/main.qml:685
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Transparent Light"
+msgstr "Átlátszó, világos"
+
+#, fuzzy
+#~| msgid "Justify center"
+#~ msgid "Align center"
+#~ msgstr "Középre igazítás"
+
+#, fuzzy
+#~| msgid "Justify"
+#~ msgid "Justified"
+#~ msgstr "Sorkizárt"
+
+#~ msgid "Font"
+#~ msgstr "Betűtípus"
+
+#~ msgid "Style:"
+#~ msgstr "Stílus:"
+
+#~ msgid "&Bold"
+#~ msgstr "&Félkövér"
+
+#~ msgid "&Italic"
+#~ msgstr "&Dőlt"
+
+#~ msgid "Size:"
+#~ msgstr "Méret:"
+
+#~ msgid "Scale font size by:"
+#~ msgstr "Betűméretezési arány:"
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#~ msgid "Color:"
+#~ msgstr "Szín:"
+
+#~ msgid "Use theme color"
+#~ msgstr "A téma színének használata"
+
+#~ msgid "Use custom color:"
+#~ msgstr "Egyedi szín:"
+
+#~ msgid "Active line highlight color:"
+#~ msgstr "Az aktív sor kiemelési színe:"
+
+#~ msgid "Use no color"
+#~ msgstr "Külön szín használata nélkül"
+
+#~ msgid "Theme"
+#~ msgstr "Téma"
+
+#~ msgid "Notes color:"
+#~ msgstr "Háttérszín:"
+
+#~ msgid "Spell Check"
+#~ msgstr "Helyesírás-ellenőrzés"
+
+#~ msgid "Enable spell check:"
+#~ msgstr "A beírt szöveg ellenőrzése:"
+
+#~ msgid "Notes Color"
+#~ msgstr "Feljegyzésszín"
+
+#~ msgid "General"
+#~ msgstr "Általános"
+
+#~ msgid "Unable to open file"
+#~ msgstr "Nem sikerült megnyitni a fájlt"
+
+#~ msgid "Welcome to the Notes Plasmoid! Type your notes here..."
+#~ msgstr "Üdvözöljük a Feljegyzések plazmoidban!"

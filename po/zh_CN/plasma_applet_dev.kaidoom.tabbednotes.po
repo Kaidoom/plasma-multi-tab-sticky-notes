@@ -1,0 +1,236 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: kdeorg\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"PO-Revision-Date: 2024-04-22 15:58\n"
+"Last-Translator: \n"
+"Language-Team: Chinese Simplified\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: kdeorg\n"
+"X-Crowdin-Project-ID: 269464\n"
+"X-Crowdin-Language: zh-CN\n"
+"X-Crowdin-File: /kf6-stable/messages/kdeplasma-addons/plasma_applet_org.kde."
+"plasma.notes.pot\n"
+"X-Crowdin-File-ID: 52826\n"
+
+#: qml/config.qml:13
+#, kde-format
+msgctxt "@title"
+msgid "Appearance"
+msgstr "外观"
+
+#: qml/configAppearance.qml:36
+#, kde-format
+msgid "%1pt"
+msgstr "%1pt"
+
+#: qml/configAppearance.qml:42
+#, kde-format
+msgid "Text font size:"
+msgstr "字体大小："
+
+#: qml/configAppearance.qml:73
+#, kde-format
+msgid "A white sticky note"
+msgstr "白色记事贴"
+
+#: qml/configAppearance.qml:74
+#, kde-format
+msgid "A black sticky note"
+msgstr "黑色记事贴"
+
+#: qml/configAppearance.qml:75
+#, kde-format
+msgid "A red sticky note"
+msgstr "红色记事贴"
+
+#: qml/configAppearance.qml:76
+#, kde-format
+msgid "An orange sticky note"
+msgstr "橙色记事贴"
+
+#: qml/configAppearance.qml:77
+#, kde-format
+msgid "A yellow sticky note"
+msgstr "黄色记事贴"
+
+#: qml/configAppearance.qml:78
+#, kde-format
+msgid "A green sticky note"
+msgstr "绿色记事贴"
+
+#: qml/configAppearance.qml:79
+#, kde-format
+msgid "A blue sticky note"
+msgstr "蓝色记事贴"
+
+#: qml/configAppearance.qml:80
+#, kde-format
+msgid "A pink sticky note"
+msgstr "粉色记事贴"
+
+#: qml/configAppearance.qml:81
+#, kde-format
+msgid "A transparent sticky note"
+msgstr "透明记事贴"
+
+#: qml/configAppearance.qml:82
+#, kde-format
+msgid "A transparent sticky note with light text"
+msgstr "透明记事贴 + 浅色文本"
+
+#: qml/main.qml:294
+#, kde-format
+msgid "Undo"
+msgstr "撤销"
+
+#: qml/main.qml:302
+#, kde-format
+msgid "Redo"
+msgstr "重做"
+
+#: qml/main.qml:312
+#, kde-format
+msgid "Cut"
+msgstr "剪切"
+
+#: qml/main.qml:320
+#, kde-format
+msgid "Copy"
+msgstr "复制"
+
+#: qml/main.qml:328
+#, kde-format
+msgid "Paste"
+msgstr "粘贴"
+
+#: qml/main.qml:334
+#, kde-format
+msgid "Paste with Full Formatting"
+msgstr "粘贴 (包含完整格式)"
+
+#: qml/main.qml:341
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Remove Formatting"
+msgstr "移除格式"
+
+#: qml/main.qml:356
+#, kde-format
+msgid "Delete"
+msgstr "删除"
+
+#: qml/main.qml:363
+#, kde-format
+msgid "Clear"
+msgstr "清除"
+
+#: qml/main.qml:373
+#, kde-format
+msgid "Select All"
+msgstr "全选"
+
+#: qml/main.qml:505
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Bold"
+msgstr "粗体"
+
+#: qml/main.qml:518
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Italic"
+msgstr "斜体"
+
+#: qml/main.qml:531
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Underline"
+msgstr "下划线"
+
+#: qml/main.qml:544
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Strikethrough"
+msgstr "删除线"
+
+#: qml/main.qml:618
+#, kde-format
+msgctxt "@action:button pin popup for panel widget"
+msgid "Keep Open"
+msgstr "保持展开状态"
+
+#: qml/main.qml:647
+#, kde-format
+msgid "Discard this note?"
+msgstr "丢弃此记事贴？"
+
+#: qml/main.qml:648
+#, kde-format
+msgid "Are you sure you want to discard this note?"
+msgstr "您确定要丢弃此记事贴吗？"
+
+#: qml/main.qml:673
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "White"
+msgstr "白色"
+
+#: qml/main.qml:674
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Black"
+msgstr "黑色"
+
+#: qml/main.qml:675
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Red"
+msgstr "红色"
+
+#: qml/main.qml:676
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Orange"
+msgstr "橙色"
+
+#: qml/main.qml:677
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Yellow"
+msgstr "黄色"
+
+#: qml/main.qml:678
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Green"
+msgstr "绿色"
+
+#: qml/main.qml:679
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Blue"
+msgstr "蓝色"
+
+#: qml/main.qml:680
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Pink"
+msgstr "粉色"
+
+#: qml/main.qml:681
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Transparent"
+msgstr "透明"
+
+#: qml/main.qml:685
+#, kde-format
+msgctxt "@item:inmenu"
+msgid "Transparent Light"
+msgstr "透明浅色"
