@@ -2,7 +2,16 @@
 
 # Verification
 
-Build with `BUILD_TESTING=ON` (the default), then run:
+Tests additionally require Qt Test/Widgets and PlasmaQuick development files,
+a Plasma desktop installation and KDE's original Sticky Note applet for the
+coexistence checks. Enable tests after following the source build instructions:
+
+```sh
+cmake -S . -B build -DBUILD_TESTING=ON
+cmake --build build
+```
+
+Then run:
 
 ```sh
 ctest --test-dir build --output-on-failure
@@ -57,3 +66,12 @@ env -u QT_PLUGIN_PATH QT_QPA_PLATFORM=wayland \
 For a relocated RPM, set `QT_PLUGIN_PATH` to its Qt plugin directory instead.
 The first integration case prints the exact loaded plugin path; check that it
 matches the intended installation.
+
+## Preview without installing
+
+With Plasma SDK's `plasmoidviewer`, you can preview without installing:
+
+```sh
+QT_PLUGIN_PATH="$PWD/build/bin${QT_PLUGIN_PATH:+:$QT_PLUGIN_PATH}" \
+  plasmoidviewer -a dev.kaidoom.tabbednotes
+```
