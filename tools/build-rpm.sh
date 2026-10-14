@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
 # SPDX-License-Identifier: BSD-2-Clause
 set -euo pipefail
 cd "$(dirname "$0")/.."

@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
 # SPDX-License-Identifier: BSD-2-Clause
 cmake_minimum_required(VERSION 3.22)
 project(plasma-sticky-note-tabs VERSION 0.3.0 LANGUAGES CXX)
@@ -27,5 +28,6 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
-install(FILES README.md DESTINATION ${KDE_INSTALL_DATADIR}/doc/plasma-sticky-note-tabs)
+install(FILES README.md LICENSE.md UPSTREAM DESTINATION ${KDE_INSTALL_DATADIR}/doc/plasma-sticky-note-tabs)
+install(FILES res/Preview.png res/Preview.png.license DESTINATION ${KDE_INSTALL_DATADIR}/doc/plasma-sticky-note-tabs/res)
 install(DIRECTORY LICENSES DESTINATION ${KDE_INSTALL_DATADIR}/licenses/plasma-sticky-note-tabs)

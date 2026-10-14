@@ -48,13 +48,13 @@
                 "Name[zh_TW]": "Davide Bettio, Lukas Kropatschek"
             }
         ],
-        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=plasmashell&component=Sticky%20Note%20widget",
+        "BugReportUrl": "https://github.com/Kaidoom/plasma-multi-tab-sticky-notes/issues",
         "Category": "Utilities",
-        "Description": "Desktop sticky note with tabs",
+        "Description": "A KDE Plasma 6 desktop sticky note widget with support for multiple tabs",
         "Icon": "knotes",
         "License": "GPL-2.0+",
-        "Name": "Sticky Note Tabs",
-        "Website": "https://kde.org/plasma-desktop/",
+        "Name": "Plasma Tabbed Notes",
+        "Website": "https://github.com/Kaidoom/plasma-multi-tab-sticky-notes",
         "Version": "0.3.0"
     },
     "X-Plasma-API-Minimum-Version": "6.0",

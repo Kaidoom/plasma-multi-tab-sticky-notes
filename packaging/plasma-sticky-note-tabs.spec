@@ -1,8 +1,11 @@
+# SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
+# SPDX-License-Identifier: BSD-2-Clause
 Name:           plasma-sticky-note-tabs
 Version:        0.3.0
-Release:        1%{?dist}
-Summary:        KDE Plasma Sticky Note with independent tabs
-License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND LGPL-2.0-or-later AND BSD-3-Clause AND BSD-2-Clause AND (GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL) AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL)
+Release:        2%{?dist}
+Summary:        Plasma Tabbed Notes, a KDE Plasma 6 sticky note widget with tabs
+License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND LGPL-2.0-or-later AND BSD-3-Clause AND BSD-2-Clause AND CC0-1.0 AND (GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL) AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL)
+URL:            https://github.com/Kaidoom/plasma-multi-tab-sticky-notes
 Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  gcc-c++
@@ -22,7 +25,7 @@ Requires:       kf6-kdeclarative
 Requires:       kf6-kcmutils
 
 %description
-A standalone fork of KDE's Sticky Note applet, with its own plugin identity
+An unofficial standalone fork of KDE's Sticky Note applet, with its own plugin identity
 and separate note storage. KDE's original Sticky Note remains available.
 
 %prep
@@ -40,3 +43,7 @@ and separate note storage. KDE's original Sticky Note remains available.
 %{_libdir}/qt6/plugins/plasma/applets/dev.kaidoom.tabbednotes.so
 %{_datadir}/doc/plasma-sticky-note-tabs/
 %license %{_datadir}/licenses/plasma-sticky-note-tabs/
+
+%changelog
+* Wed Oct 14 2026 Plasma Tabbed Notes contributors - 0.3.0-2
+- Package public release documentation, attribution and preview.

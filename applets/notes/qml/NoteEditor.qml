@@ -1,6 +1,7 @@
 /*
     SPDX-FileCopyrightText: 2014 David Edmundson <davidedmundson@kde.org>
     SPDX-FileCopyrightText: 2014, 2015 Kai Uwe Broulik <kde@privat.broulik.de>
+    SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */

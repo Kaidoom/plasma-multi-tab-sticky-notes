@@ -1,5 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2014 David Edmundson <david@davidedmundson.co.uk>
+ * SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
  *

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: GPL-2.0-or-later -->
+
 # Verification
 
 Build with `BUILD_TESTING=ON` (the default), then run:

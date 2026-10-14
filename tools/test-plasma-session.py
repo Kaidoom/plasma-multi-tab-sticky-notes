@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
 # SPDX-License-Identifier: BSD-2-Clause
 """Exercise a private KWin/Plasma Wayland session; never replace the live desktop."""
 import argparse

@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "tabmodel.h"
 #include "filesystemnoteloader.h"

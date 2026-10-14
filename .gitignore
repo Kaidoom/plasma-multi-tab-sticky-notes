@@ -1,4 +1,49 @@
+# SPDX-FileCopyrightText: None
+# SPDX-License-Identifier: CC0-1.0
+
+# Out-of-source builds and RPM output
 /build*/
 /dist/
+/cmake-build-*/
+/bin/
+/locale/
+
+# CMake, Ninja and compiler output (including accidental in-source builds)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+DartConfiguration.tcl
+Testing/
+install_manifest.txt
+ecm_uninstall.cmake
+/prefix.sh
+/prefix.sh.fish
+compile_commands.json
+build.ninja
+rules.ninja
+.ninja_deps
+.ninja_log
+Makefile
+*_autogen/
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.moc
+*.qm
+*.mo
+
+# Local editors and temporary files
+/.idea/
+/.vscode/
+CMakeUserPresets.json
 *.user
+*.swp
+*.swo
+*~
+.DS_Store
 __pycache__/
+*.py[cod]
+*.log

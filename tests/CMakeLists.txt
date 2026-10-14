@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
 # SPDX-License-Identifier: BSD-2-Clause
 add_executable(applet-integration appletintegration.cpp)
 target_link_libraries(applet-integration PRIVATE

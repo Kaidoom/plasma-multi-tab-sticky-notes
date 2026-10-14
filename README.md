@@ -1,88 +1,110 @@
-# Sticky Note Tabs
+<!-- SPDX-License-Identifier: GPL-2.0-or-later -->
 
-A standalone fork of KDE Plasma's Sticky Note for Plasma 6.7, based on
-kdeplasma-addons 6.7.5. The plugin ID is `dev.kaidoom.tabbednotes`.
+# Plasma Tabbed Notes
 
-## Build on Fedora
+A KDE Plasma 6 desktop sticky note widget with support for multiple tabs.
 
-Requires Qt 6.10+, KDE Frameworks 6.26+, Plasma 6.7+, CMake and a C++20 compiler.
+![Plasma Tabbed Notes preview](res/Preview.png)
+
+An independent, unofficial fork of KDE Plasma's Sticky Note widget. It keeps
+the familiar note appearance, rich-text editor and desktop/panel integration,
+with separate notes in a compact tab bar.
+
+## Features
+
+- Create, rename and close tabs; drag titles to reorder them.
+- Scroll overflowing tabs, including by holding a dragged tab near an edge.
+- Switch with Ctrl+Tab and Ctrl+Shift+Tab.
+- Keep independent editing and undo histories for each opened tab.
+- Restore notes, tab order and the active tab after restarting Plasma.
+- Recover closed notes; retain note files when a widget or the package is removed.
+
+Double-click a title to rename it. Closing a nonempty tab asks for confirmation.
+The fork uses its own plugin ID, `dev.kaidoom.tabbednotes`, and does not replace
+KDE's original Sticky Note.
+
+## Compatibility
+
+Requires Plasma 6.7+, Qt 6.10+ and KDE Frameworks 6.26+. Tested on Fedora KDE 44
+with Plasma 6.7.5, Qt 6.11.2 and Frameworks 6.31.0, using Wayland. Other
+distributions and newer Plasma versions have not been verified.
+
+## Build
+
+Install the Fedora build dependencies:
 
 ```sh
-sudo dnf install gcc-c++ cmake ninja-build extra-cmake-modules \
+sudo dnf install git gcc-c++ cmake ninja-build extra-cmake-modules \
   qt6-qtbase-devel qt6-qtdeclarative-devel libplasma-devel \
   kf6-kconfig-devel kf6-kcoreaddons-devel kf6-ki18n-devel \
-  kf6-ksvg-devel plasma-sdk rpm-build
+  kf6-ksvg-devel rpm-build plasma-sdk
+git clone https://github.com/Kaidoom/plasma-multi-tab-sticky-notes.git
+cd plasma-multi-tab-sticky-notes
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCMAKE_INSTALL_PREFIX=/usr
 cmake --build build
+ctest --test-dir build --output-on-failure
 ```
 
-## Run from the build directory
+To preview the build without installing it (`plasmoidviewer` comes from
+`plasma-sdk`):
 
 ```sh
 QT_PLUGIN_PATH="$PWD/build/bin${QT_PLUGIN_PATH:+:$QT_PLUGIN_PATH}" \
   plasmoidviewer -a dev.kaidoom.tabbednotes
 ```
 
-The QML and configuration are embedded in a compiled plugin. Installing a QML
-directory with `kpackagetool6` is insufficient. No persistent environment or
-Plasma service changes are required for development.
+This is a compiled applet with embedded QML. It cannot be installed as a
+QML-only widget using `kpackagetool6`.
 
-## Install, update and remove
+## Install, update and uninstall
 
-Build an RPM from the committed source:
+Build the Fedora RPM from the current Git commit, then install it:
 
 ```sh
 ./tools/build-rpm.sh
-sudo dnf install ./dist/plasma-sticky-note-tabs-0.3.0-*.rpm
+sudo dnf install ./dist/plasma-sticky-note-tabs-0.3.0-2.*.rpm
 ```
 
-The RPM installs the fork's plugin into Fedora's standard Qt plugin
-directory and its own translations, documentation and licences. After installing
-or updating, log out and back in, then add **Sticky Note Tabs** from the widget
-chooser. Updates use the same build and install commands.
+The RPM installs into Fedora's standard Qt plugin directory
+(`/usr/lib64/qt6/plugins/plasma/applets/` on x86_64). No persistent environment
+variables or Plasma service changes are needed. Log out and back in after
+installation or an update, then add **Plasma Tabbed Notes** from the widget
+chooser. To update, pull the latest source and repeat the build/install steps.
+
+To uninstall:
 
 ```sh
 sudo dnf remove plasma-sticky-note-tabs
 ```
 
-Removing the RPM leaves note files in your home directory. KDE's original
-Sticky Note plugin is not replaced.
+## Storage and recovery
 
-## Note storage
+Notes are UTF-8 rich-text files in `$XDG_DATA_HOME/plasma_tabbed_notes/`, normally
+`~/.local/share/plasma_tabbed_notes/`. KDE's original `plasma_notes` directory is
+unaffected. Tab titles, order, active selection and cursor/scroll positions are
+stored in the widget's `tabState` entry in Plasma's configuration, normally
+`~/.config/plasma-org.kde.plasma.desktop-appletsrc`.
 
-The fork stores notes in `$XDG_DATA_HOME/plasma_tabbed_notes/`, normally
-`~/.local/share/plasma_tabbed_notes/`. It does not read or change KDE's original
-`plasma_notes` directory. Contents are UTF-8 rich text.
+Closing a tab, removing a widget or uninstalling the package retains the note
+files. Use **Recover Closed Note…** in the widget's context menu to copy a retained
+note into a new tab. To view a retained file elsewhere, copy it to a filename
+ending in `.html` and open it in a browser.
 
-## Tabs and recovery
+Back up both the note directory and Plasma's configuration while Plasma is
+stopped. Edits save automatically and before switching tabs; forced termination
+can still lose edits that have not yet been saved.
 
-Use **+** to add a note, click a title to switch, double-click to rename, and
-use the tab's **×** to close it. Nonempty tabs ask for confirmation. Ctrl+Tab and
-Ctrl+Shift+Tab cycle through tabs. Drag a tab title left or right to reorder it;
-hold it at an edge to scroll through overflowing tabs. Press Escape or drop
-outside the strip to cancel. Tab order is saved automatically.
+## Attribution and licensing
 
-Each opened tab keeps its own editor and undo history. New edits save after
-one second of inactivity, at least every ten seconds while typing, and before
-switching. Save failures keep the current tab and draft available and show an
-error. As with any editor, forced termination can lose edits not yet saved.
+Derived from [`KDE/kdeplasma-addons`](https://github.com/KDE/kdeplasma-addons),
+`applets/notes/`, release **v6.7.5**, commit
+[`fa98db42c07adb9f459deecc00a9e0ae0206ab56`](https://github.com/KDE/kdeplasma-addons/commit/fa98db42c07adb9f459deecc00a9e0ae0206ab56).
+Thanks to the KDE Sticky Note authors, contributors and translation teams.
+This project is not an official KDE product or endorsed by KDE. Report issues
+in [this repository](https://github.com/Kaidoom/plasma-multi-tab-sticky-notes/issues).
 
-Closing tabs, removing widgets and uninstalling the RPM retain note files.
-Use **Recover Closed Note…** in a widget's context menu to copy retained notes
-into new tabs. The recovery list shows text previews; recovered notes receive
-a new title. Recovery copies files, so it also works after removing a widget.
-
-Tab titles, order, active selection and cursor/scroll positions are stored in
-the widget's `tabState` entry in Plasma's normal configuration, usually
-`~/.config/plasma-org.kde.plasma.desktop-appletsrc`. Note contents are stored
-separately as UUID-named UTF-8 HTML files. Back up both the note directory and
-Plasma's configuration while Plasma is stopped. Uninstalling does not purge
-either. To inspect a retained note outside Plasma, copy it to a filename ending
-in `.html` and open it in a browser.
-
-## Attribution
-
-Based on KDE's Sticky Note applet. The exact upstream revision is recorded in
-`UPSTREAM`. Original author credits and licence headers are retained; see
-`LICENSES/` for the GPL, LGPL and BSD terms applying to the source files.
+The applet is distributed under GPL-2.0-or-later, with components under their
+own GPL, LGPL and BSD terms. Original copyright and license notices are
+preserved. See [LICENSE.md](LICENSE.md) for the file-level overview,
+[LICENSES/](LICENSES/) for the license texts, and [UPSTREAM](UPSTREAM) for provenance.

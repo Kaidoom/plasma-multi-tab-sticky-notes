@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
 // SPDX-License-Identifier: BSD-2-Clause
 #include <KConfigGroup>
 #include <KConfigLoader>
