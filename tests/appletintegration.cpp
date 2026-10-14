@@ -609,9 +609,11 @@ private Q_SLOTS:
         dragPointer(&h.window, from, edge);
         const auto markers = visualItems(h.item->fullRepresentationItem(), u"tabInsertionMarker"_s);
         QVERIFY(markers.first()->isVisible());
-        QTRY_VERIFY_WITH_TIMEOUT(view->property("contentX").toReal() > 250, 3000);
+        QTRY_VERIFY2_WITH_TIMEOUT(view->property("contentX").toReal() - view->property("originX").toReal() > 250,
+            qPrintable(evaluate(view, u"JSON.stringify({x:contentX, origin:originX, width:width, total:contentWidth, drag:bar.dragPosition, id:bar.draggedId, insertion:bar.insertionIndex})"_s).toString()), 3000);
         // The controller must survive virtualization of its original title delegate.
-        QTRY_VERIFY_WITH_TIMEOUT(view->property("contentX").toReal() + view->width() >= view->property("contentWidth").toReal() - 2, 5000);
+        QTRY_VERIFY_WITH_TIMEOUT(view->property("contentX").toReal() + view->width()
+            >= view->property("originX").toReal() + view->property("contentWidth").toReal() - 2, 5000);
         const auto markerPosition = markers.first()->mapToItem(view, QPointF());
         QVERIFY(markerPosition.x() >= 0 && markerPosition.x() < view->width());
         QCOMPARE(markerPosition.y(), 0.0);
