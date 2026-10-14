@@ -330,6 +330,24 @@ bool TabModel::renameTab(const QString &id, const QString &title)
     return persist();
 }
 
+bool TabModel::moveTab(const QString &id, int destination)
+{
+    const int source = indexOf(id);
+    if (!m_ready || source < 0 || destination < 0 || destination >= m_tabs.size())
+        return false;
+    if (source == destination)
+        return true;
+
+    // Move the row, not its contents: QML must retain each editor and undo stack.
+    const int before = destination > source ? destination + 1 : destination;
+    if (!beginMoveRows({ }, source, source, { }, before))
+        return false;
+    m_tabs.move(source, destination);
+    endMoveRows();
+    Q_EMIT activeIdChanged(); // The ID is unchanged, but its index may have moved.
+    return persist();
+}
+
 bool TabModel::hasText(const QString &id)
 {
     // Inspect the stored document even when its editor has never been

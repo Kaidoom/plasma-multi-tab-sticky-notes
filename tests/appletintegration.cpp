@@ -6,6 +6,7 @@
 #include <Plasma/Corona>
 #include <Plasma/PluginLoader>
 #include <PlasmaQuick/AppletQuickItem>
+#include <QAbstractItemModelTester>
 #include <QApplication>
 #include <QClipboard>
 #include <QFile>
@@ -18,9 +19,11 @@
 #include <QQmlContext>
 #include <QQmlExpression>
 #include <QQuickWindow>
+#include <QSignalSpy>
 #include <QTemporaryDir>
 #include <QTest>
 #include <QTextDocument>
+#include <QWheelEvent>
 
 using namespace Qt::StringLiterals;
 
@@ -136,6 +139,32 @@ struct Harness {
         load(id);
     }
 };
+
+static QStringList tabOrder(const Harness &h)
+{
+    QStringList ids;
+    const auto tabs = QJsonDocument::fromJson(h.state().toUtf8()).object().value(u"tabs"_s).toArray();
+    for (const auto &tab : tabs)
+        ids.append(tab.toObject().value(u"id"_s).toString());
+    return ids;
+}
+
+static QQuickItem *tabTitle(const Harness &h, const QString &id)
+{
+    for (auto *button : visualItems(h.item->fullRepresentationItem(), u"tabTitleButton"_s)) {
+        if (button->parentItem()->property("noteId").toString() == id)
+            return button;
+    }
+    return nullptr;
+}
+
+static void dragPointer(QWindow *window, const QPoint &from, const QPoint &to)
+{
+    QTest::mousePress(window, Qt::LeftButton, Qt::NoModifier, from);
+    for (int step = 1; step <= 12; ++step) {
+        QTest::mouseMove(window, from + (to - from) * step / 12, 10);
+    }
+}
 
 class AppletIntegration : public QObject
 {
@@ -430,6 +459,202 @@ private Q_SLOTS:
         QCOMPARE(h.count(), 1);
         QCOMPARE(plain(h.editor()->property("text").toString()), u"baseline contents"_s);
         QVERIFY(file.exists());
+    }
+
+    void reorderingPreservesEditorsAndDrafts()
+    {
+        Harness h;
+        h.load();
+        QTRY_VERIFY(h.editor());
+        const auto a = h.id();
+        h.insert(u"Alpha Ω"_s);
+        QPointer<QQuickItem> editorA = h.editor();
+        h.run(u"addTab()"_s);
+        const auto b = h.id();
+        h.insert(u"Beta 日本語"_s);
+        QPointer<QQuickItem> editorB = h.editor();
+        h.run(u"addTab()"_s);
+        const auto c = h.id();
+        h.insert(u"Gamma draft"_s);
+        QPointer<QQuickItem> editorC = h.editor();
+        auto *model = qobject_cast<QAbstractItemModel *>(h.model());
+        QAbstractItemModelTester modelTester(model, QAbstractItemModelTester::FailureReportingMode::QtTest);
+        QSignalSpy resets(model, &QAbstractItemModel::modelReset);
+        QSignalSpy moves(model, &QAbstractItemModel::rowsMoved);
+        QVERIFY(h.run(u"activeEditor.note.dirty"_s).toBool());
+        QVERIFY(h.run(u"tabModel.moveTab("_s + quoted(c) + u", 0)"_s).toBool());
+        QCOMPARE(tabOrder(h), (QStringList { c, a, b }));
+        QCOMPARE(h.id(), c);
+        QCOMPARE(h.editor(), editorC.data());
+        QVERIFY(h.run(u"activeEditor.note.dirty"_s).toBool());
+        QVERIFY(h.run(u"tabModel.moveTab("_s + quoted(a) + u", 2)"_s).toBool());
+        QCOMPARE(tabOrder(h), (QStringList { c, b, a }));
+        QVERIFY(h.run(u"tabModel.moveTab("_s + quoted(b) + u", 0)"_s).toBool());
+        QCOMPARE(tabOrder(h), (QStringList { b, c, a }));
+        QCOMPARE(h.model()->property("activeIndex").toInt(), 1);
+        QCOMPARE(moves.count(), 3);
+        QCOMPARE(resets.count(), 0);
+        QVERIFY(!h.run(u"tabModel.moveTab('missing', 0)"_s).toBool());
+        QVERIFY(!h.run(u"tabModel.moveTab("_s + quoted(a) + u", -1)"_s).toBool());
+        QVERIFY(!h.run(u"tabModel.moveTab("_s + quoted(a) + u", 3)"_s).toBool());
+        QVERIFY(h.run(u"tabModel.moveTab("_s + quoted(a) + u", 2)"_s).toBool());
+        QCOMPARE(moves.count(), 3);
+        evaluate(editorC, u"undo()"_s);
+        QVERIFY(plain(editorC->property("text").toString()).isEmpty());
+        QCOMPARE(plain(editorA->property("text").toString()), u"Alpha Ω"_s);
+        QCOMPARE(plain(editorB->property("text").toString()), u"Beta 日本語"_s);
+        evaluate(editorC, u"redo()"_s);
+        h.run(u"navigate(1)"_s);
+        QCOMPARE(h.id(), a);
+        QCOMPARE(h.editor(), editorA.data());
+        h.run(u"navigate(-1)"_s);
+        QCOMPARE(h.id(), c);
+        QCOMPARE(h.editor(), editorC.data());
+        h.run(u"flushEditors()"_s);
+        h.reload();
+        QTRY_VERIFY(h.editor());
+        QCOMPARE(tabOrder(h), (QStringList { b, c, a }));
+        QCOMPARE(h.id(), c);
+        QCOMPARE(plain(h.editor()->property("text").toString()), u"Gamma draft"_s);
+        QCOMPARE(visualItems(h.item->fullRepresentationItem(), u"noteTextArea"_s).size(), 1);
+        QVERIFY(h.run(u"tabModel.moveTab("_s + quoted(a) + u", 0)"_s).toBool());
+        QCOMPARE(visualItems(h.item->fullRepresentationItem(), u"noteTextArea"_s).size(), 1);
+        QCOMPARE(tabOrder(h), (QStringList { a, b, c }));
+        QCOMPARE(h.model()->property("activeIndex").toInt(), 2);
+        QCOMPARE(plain(stored(a)), u"Alpha Ω"_s);
+        QCOMPARE(plain(stored(b)), u"Beta 日本語"_s);
+        QCOMPARE(plain(stored(c)), u"Gamma draft"_s);
+    }
+
+    void dragReordering_data()
+    {
+        QTest::addColumn<bool>("panel");
+        QTest::newRow("desktop") << false;
+        QTest::newRow("panel-popup") << true;
+    }
+
+    void dragReordering()
+    {
+        QFETCH(bool, panel);
+        Harness h(panel);
+        h.load();
+        if (panel)
+            h.item->setExpanded(true);
+        QTRY_VERIFY(h.editor());
+        const auto a = h.id();
+        h.insert(u"First"_s);
+        h.run(u"addTab()"_s);
+        const auto b = h.id();
+        h.run(u"addTab()"_s);
+        const auto c = h.id();
+        h.select(a);
+        QPointer<QQuickItem> editor = h.editor();
+        QTest::qWait(100);
+        auto *window = h.item->fullRepresentationItem()->window();
+        QVERIFY(window);
+        auto *titleA = tabTitle(h, a);
+        auto *titleC = tabTitle(h, c);
+        QVERIFY(titleA && titleC);
+        const auto from = titleA->mapToScene(QPointF(10, titleA->height() / 2)).toPoint();
+        const auto to = titleC->mapToScene(QPointF(titleC->width() - 3, titleC->height() / 2)).toPoint();
+        dragPointer(window, from, to);
+        const auto markers = visualItems(h.item->fullRepresentationItem(), u"tabInsertionMarker"_s);
+        QVERIFY(!markers.isEmpty());
+        QVERIFY(markers.first()->isVisible());
+        QCOMPARE(tabOrder(h), (QStringList { a, b, c })); // Commit only on release.
+        if (const auto path = qEnvironmentVariable("TABBEDNOTES_REORDER_SCREENSHOT"); !panel && !path.isEmpty()) {
+            QTest::qWait(50);
+            QVERIFY(window->grabWindow().save(path));
+        }
+        QTest::mouseRelease(window, Qt::LeftButton, Qt::NoModifier, to);
+        QTRY_COMPARE(tabOrder(h), (QStringList { b, c, a }));
+        QCOMPARE(h.id(), a);
+        QCOMPARE(h.editor(), editor.data());
+        QVERIFY(editor->property("canUndo").toBool());
+        QVERIFY(!markers.first()->isVisible());
+
+        // Drag an inactive tab left without changing the selected document.
+        QTest::qWait(50);
+        auto *titleB = tabTitle(h, b);
+        titleC = tabTitle(h, c);
+        QVERIFY(titleB && titleC);
+        const auto backFrom = titleC->mapToScene(QPointF(10, titleC->height() / 2)).toPoint();
+        const auto backTo = titleB->mapToScene(QPointF(2, titleB->height() / 2)).toPoint();
+        dragPointer(window, backFrom, backTo);
+        QTest::mouseRelease(window, Qt::LeftButton, Qt::NoModifier, backTo);
+        QTRY_COMPARE(tabOrder(h), (QStringList { c, b, a }));
+        QCOMPARE(h.id(), a);
+        QCOMPARE(h.editor(), editor.data());
+    }
+
+    void dragOverflowAndCancellation()
+    {
+        Harness h;
+        h.load();
+        QTRY_VERIFY(h.editor());
+        const auto first = h.id();
+        for (int i = 0; i < 7; ++i)
+            h.run(u"addTab()"_s);
+        h.select(first);
+        h.window.resize(210, 260);
+        h.item->setSize({ 210, 260 });
+        QTest::qWait(100);
+        auto *view = h.item->fullRepresentationItem()->findChild<QQuickItem *>(u"tabList"_s);
+        QVERIFY(view);
+        auto *title = tabTitle(h, first);
+        QVERIFY(title);
+        const auto order = tabOrder(h);
+        const auto from = title->mapToScene(QPointF(10, title->height() / 2)).toPoint();
+        const auto edge = view->mapToScene(QPointF(view->width() - 2, view->height() / 2)).toPoint();
+        dragPointer(&h.window, from, edge);
+        const auto markers = visualItems(h.item->fullRepresentationItem(), u"tabInsertionMarker"_s);
+        QVERIFY(markers.first()->isVisible());
+        QTRY_VERIFY_WITH_TIMEOUT(view->property("contentX").toReal() > 250, 3000);
+        // The controller must survive virtualization of its original title delegate.
+        QTRY_VERIFY_WITH_TIMEOUT(view->property("contentX").toReal() + view->width() >= view->property("contentWidth").toReal() - 2, 5000);
+        const auto markerPosition = markers.first()->mapToItem(view, QPointF());
+        QVERIFY(markerPosition.x() >= 0 && markerPosition.x() < view->width());
+        QCOMPARE(markerPosition.y(), 0.0);
+        QTest::mouseRelease(&h.window, Qt::LeftButton, Qt::NoModifier, edge);
+        auto expected = order;
+        expected.move(0, expected.size() - 1);
+        QTRY_COMPARE(tabOrder(h), expected);
+        QCOMPARE(h.id(), first);
+        QVERIFY(!markers.first()->isVisible());
+        QTest::qWait(50);
+        title = tabTitle(h, first);
+        QVERIFY(title);
+        const auto right = title->mapToScene(QPointF(10, title->height() / 2)).toPoint();
+        const auto left = view->mapToScene(QPointF(2, view->height() / 2)).toPoint();
+        dragPointer(&h.window, right, left);
+        QVERIFY(markers.first()->isVisible());
+        QTest::keyClick(&h.window, Qt::Key_Escape);
+        QVERIFY(!markers.first()->isVisible());
+        QTest::mouseRelease(&h.window, Qt::LeftButton, Qt::NoModifier, left);
+        QCOMPARE(tabOrder(h), expected);
+        // Row moves can shift ListView.originX. Wheel scrolling must still
+        // reach both ends instead of clamping to the old zero-based range.
+        const QPointF wheelPosition = view->mapToScene(QPointF(view->width() / 2, view->height() / 2));
+        QWheelEvent wheelRight(wheelPosition, h.window.mapToGlobal(wheelPosition.toPoint()), { }, QPoint(0, -1200), Qt::NoButton,
+            Qt::NoModifier, Qt::NoScrollPhase, false);
+        QCoreApplication::sendEvent(&h.window, &wheelRight);
+        QCOMPARE(view->property("contentX").toReal(),
+            view->property("originX").toReal() + view->property("contentWidth").toReal() - view->width());
+        QWheelEvent wheelLeft(wheelPosition, h.window.mapToGlobal(wheelPosition.toPoint()), { }, QPoint(0, 1200), Qt::NoButton,
+            Qt::NoModifier, Qt::NoScrollPhase, false);
+        QCoreApplication::sendEvent(&h.window, &wheelLeft);
+        QCOMPARE(view->property("contentX").toReal(), view->property("originX").toReal());
+        // Dropping outside the strip also leaves the order unchanged.
+        evaluate(view, u"positionViewAtIndex(0, ListView.Beginning)"_s);
+        QTest::qWait(50);
+        title = tabTitle(h, expected.first());
+        QVERIFY(title);
+        const auto start = title->mapToScene(QPointF(10, title->height() / 2)).toPoint();
+        const auto outside = view->mapToScene(QPointF(view->width() / 2, view->height() + 40)).toPoint();
+        dragPointer(&h.window, start, outside);
+        QVERIFY(!markers.first()->isVisible());
+        QTest::mouseRelease(&h.window, Qt::LeftButton, Qt::NoModifier, outside);
+        QCOMPARE(tabOrder(h), expected);
     }
 
     void malformedStateIsPreserved()

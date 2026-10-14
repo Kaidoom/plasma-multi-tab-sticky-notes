@@ -34,7 +34,7 @@ Build an RPM from the committed source:
 
 ```sh
 ./tools/build-rpm.sh
-sudo dnf install ./dist/plasma-sticky-note-tabs-0.2.0-*.rpm
+sudo dnf install ./dist/plasma-sticky-note-tabs-0.3.0-*.rpm
 ```
 
 The RPM installs the fork's plugin into Fedora's standard Qt plugin
@@ -59,7 +59,9 @@ The fork stores notes in `$XDG_DATA_HOME/plasma_tabbed_notes/`, normally
 
 Use **+** to add a note, click a title to switch, double-click to rename, and
 use the tab's **×** to close it. Nonempty tabs ask for confirmation. Ctrl+Tab and
-Ctrl+Shift+Tab cycle through tabs. The tab strip scrolls when it overflows.
+Ctrl+Shift+Tab cycle through tabs. Drag a tab title left or right to reorder it;
+hold it at an edge to scroll through overflowing tabs. Press Escape or drop
+outside the strip to cancel. Tab order is saved automatically.
 
 Each opened tab keeps its own editor and undo history. New edits save after
 one second of inactivity, at least every ten seconds while typing, and before
@@ -84,4 +86,3 @@ in `.html` and open it in a browser.
 Based on KDE's Sticky Note applet. The exact upstream revision is recorded in
 `UPSTREAM`. Original author credits and licence headers are retained; see
 `LICENSES/` for the GPL, LGPL and BSD terms applying to the source files.
-

@@ -39,6 +39,7 @@ public:
     Q_INVOKABLE bool next(int direction);
     Q_INVOKABLE bool addTab();
     Q_INVOKABLE bool renameTab(const QString &id, const QString &title);
+    Q_INVOKABLE bool moveTab(const QString &id, int destination);
     Q_INVOKABLE bool hasText(const QString &id);
     Q_INVOKABLE bool closeTab(const QString &id);
     Q_INVOKABLE bool flushAll();

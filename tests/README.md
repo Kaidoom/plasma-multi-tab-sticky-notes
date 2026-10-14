@@ -12,8 +12,10 @@ python3 tools/test-plasma-session.py
 The C++ tests use temporary XDG data/configuration directories. They load the
 compiled applet through Plasma's real plugin loader and QML engine. Coverage
 includes rich text, Unicode, links, both paste modes, double-click renaming,
-keyboard navigation, rapid switching, undo/redo isolation, cursor restoration,
+keyboard navigation, drag reordering on desktop and panel popups, edge scrolling,
+drag cancellation, rapid switching, undo/redo isolation, cursor restoration,
 lazy editor creation, confirmation for unvisited nonempty tabs, recovery,
+reordering with pending edits and unopened tabs, order persistence,
 widget duplication with pending edits, narrow layouts, overflow, the panel
 popup, baseline migration, invalid metadata, external write conflicts and
 coexistence with KDE's original Notes applet. Clipboard contents are restored

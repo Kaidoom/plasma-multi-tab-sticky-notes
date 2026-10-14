@@ -103,6 +103,7 @@ with tempfile.TemporaryDirectory(prefix='tabbednotes-plasma-') as directory:
             (notes / second).write_text('<p><i>Restart second 日本語</i> <a href="https://kde.org">KDE</a></p>')
             state['tabs'].append(dict(id=second, title='Second', cursor=5, x=0, y=0))
             state['active'] = second
+            state['tabs'].reverse()  # Restore a reordered strip, with selection identified by note ID.
             lines[i] = 'tabState=' + json.dumps(state, ensure_ascii=False, separators=(',', ':'))
             expected.append(state)
         assert len(expected) == 2, 'Desktop and panel applets must both save their configuration'
