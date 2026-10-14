@@ -1,131 +1,137 @@
 /*
  * SPDX-FileCopyrightText: 2014 David Edmundson <david@davidedmundson.co.uk>
- *
  * SPDX-License-Identifier: LGPL-2.1-or-later
- *
  */
-
 #include "filesystemnoteloader.h"
-
 #include "note.h"
-
-#include <QDebug>
+#include <KDirWatch>
+#include <KLocalizedString>
+#include <QFile>
+#include <QFileInfo>
+#include <QRegularExpression>
+#include <QSaveFile>
 #include <QStandardPaths>
 #include <QUuid>
 
-#include <KDirWatch>
-#include <KIO/CopyJob>
-
 class FileNote : public Note
 {
-    Q_OBJECT
 public:
-    FileNote(const QString &path, const QString &id);
-    void load();
-    void save(const QString &text) override;
+    FileNote(const QString &path, const QString &id)
+        : Note(id)
+        , m_path(path)
+    {
+        if (!path.isEmpty()) {
+            m_watcher.addFile(path);
+        }
+        const auto changed = [this](const QString &p) {
+            if (p == m_path)
+                load();
+        };
+        connect(&m_watcher, &KDirWatch::created, this, changed);
+        connect(&m_watcher, &KDirWatch::dirty, this, changed);
+        connect(&m_watcher, &KDirWatch::deleted, this, changed);
+        load();
+    }
+
+    bool flush() override
+    {
+        if (!ready())
+            return false;
+        if (!dirty())
+            return true;
+        // Do not overwrite an externally changed or removed file with a stale
+        // editor.
+        QFile existing(m_path);
+        if (QFileInfo(m_path).isSymLink() || !existing.open(QIODevice::ReadOnly) || existing.readAll() != m_diskText
+            || existing.error() != QFileDevice::NoError) {
+            setError(i18n("The note file changed outside this widget. Your edits are "
+                          "still here. Copy them before resolving the file conflict."));
+            return false;
+        }
+        existing.close();
+        const QByteArray bytes = noteText().toUtf8();
+        QSaveFile file(m_path);
+        if (!file.open(QIODevice::WriteOnly) || file.write(bytes) != bytes.size() || !file.commit()) {
+            setError(i18n("Could not save the note: %1", file.errorString()));
+            return false;
+        }
+        m_diskText = bytes;
+        saved();
+        return true;
+    }
 
 private:
-    void fileSystemChanged(const QString &path);
+    void load()
+    {
+        if (m_path.isEmpty() || QFileInfo(m_path).isSymLink()) {
+            setError(i18n("The note filename is invalid or is a symbolic link."));
+            return;
+        }
+        QFile file(m_path);
+        if (!file.open(QIODevice::ReadOnly)) {
+            setError(i18n("Could not read the note: %1", file.errorString()));
+            return;
+        }
+        const auto bytes = file.readAll();
+        if (file.error() != QFileDevice::NoError) {
+            setError(i18n("Could not read the note: %1", file.errorString()));
+            return;
+        }
+        if (dirty()) {
+            if (bytes != m_diskText)
+                setError(i18n("The note file changed outside this widget. Your unsaved "
+                              "edits are preserved."));
+            return;
+        }
+        m_diskText = bytes;
+        loaded(QString::fromUtf8(bytes));
+    }
     QString m_path;
-    KDirWatch *m_watcher;
+    QByteArray m_diskText;
+    KDirWatch m_watcher;
 };
 
 FileSystemNoteLoader::FileSystemNoteLoader()
 {
-    const QString genericDataLocation = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
-    const QString suffix = QStringLiteral("plasma_tabbed_notes");
-    QDir(genericDataLocation).mkdir(suffix);
-    m_notesDir.setPath(genericDataLocation + QDir::separator() + suffix);
+    m_notesDir.setPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("/plasma_tabbed_notes"));
+    QDir().mkpath(m_notesDir.absolutePath());
+}
+
+bool FileSystemNoteLoader::validId(const QString &id)
+{
+    // Also accept the truncated UUIDs written by the upstream single-note
+    // baseline.
+    static const QRegularExpression re(QStringLiteral("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]"
+                                                      "{4}-[0-9a-fA-F]{10,12}$"));
+    return re.match(id).hasMatch();
 }
 
 QStringList FileSystemNoteLoader::allNoteIds()
 {
-    return m_notesDir.entryList(QStringList{QStringLiteral("*.txt")});
-}
-
-void FileSystemNoteLoader::deleteNoteResources(const QString &id)
-{
-    const QUrl url = QUrl::fromLocalFile(m_notesDir.absoluteFilePath(id));
-    KIO::Job *job = KIO::trash(url);
-    if (!job->exec()) {
-        m_notesDir.remove(id);
+    QStringList ids;
+    for (const auto &id : m_notesDir.entryList(QDir::Files | QDir::NoSymLinks, QDir::Time)) {
+        if (validId(id))
+            ids.append(id);
     }
-    m_idToApplet.remove(id);
+    return ids;
 }
 
-Note *FileSystemNoteLoader::loadNote(const QString &id, uint appletId)
+Note *FileSystemNoteLoader::loadNote(const QString &id)
 {
-    QString idToUse = id;
-
-    if (idToUse.isEmpty()) {
-        idToUse = QUuid::createUuid().toString().mid(1, 34);
-        m_idToApplet.insert(idToUse, appletId);
-    } else {
-        if (m_idToApplet.contains(id)) {
-            uint existingApplet = m_idToApplet.value(id);
-            if (existingApplet != appletId) {
-                // If two applets are using the same note id, which can
-                // happen if e.g. the panel is cloned, we copy the
-                // note file to a new id and assign one file per applet.
-                // This avoids having different applets using the same
-                // file.
-                idToUse = QUuid::createUuid().toString().mid(1, 34);
-                QFile::copy(m_notesDir.absoluteFilePath(id), m_notesDir.absoluteFilePath(idToUse));
-                m_idToApplet.insert(idToUse, appletId);
-            }
-        } else {
-            m_idToApplet.insert(idToUse, appletId);
-        }
-    }
-
-    return new FileNote(m_notesDir.absoluteFilePath(idToUse), idToUse);
+    // Invalid configuration must never escape the fork's data directory.
+    return new FileNote(validId(id) ? m_notesDir.absoluteFilePath(id) : QString(), id);
 }
 
-FileNote::FileNote(const QString &path, const QString &id)
-    : Note(id)
-    , m_path(path)
-    , m_watcher(new KDirWatch(this))
+Note *FileSystemNoteLoader::createNote(const QString &text)
 {
-    m_watcher->addFile(path);
-
-    connect(m_watcher, &KDirWatch::created, this, &FileNote::fileSystemChanged);
-    connect(m_watcher, &KDirWatch::dirty, this, &FileNote::fileSystemChanged);
-
-    load();
+    const auto id = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    const auto path = m_notesDir.absoluteFilePath(id);
+    const auto bytes = text.toUtf8();
+    QSaveFile file(path);
+    if (!file.open(QIODevice::WriteOnly))
+        return nullptr;
+    file.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+    if (file.write(bytes) != bytes.size() || !file.commit())
+        return nullptr;
+    return new FileNote(path, id);
 }
-
-void FileNote::load()
-{
-    QFile file(m_path);
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        setNoteText(QString::fromUtf8(file.readAll()));
-    }
-}
-
-void FileNote::save(const QString &text)
-{
-    if (text == noteText()) {
-        return;
-    }
-
-    m_watcher->removeFile(m_path);
-
-    QFile file(m_path);
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        file.write(text.toUtf8());
-    } else {
-        qWarning() << "Could not write notes to file" << m_path;
-    }
-    setNoteText(text);
-
-    m_watcher->addFile(m_path);
-}
-
-void FileNote::fileSystemChanged(const QString &path)
-{
-    if (path == m_path) {
-        load();
-    }
-}
-
-#include "filesystemnoteloader.moc"

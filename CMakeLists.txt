@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: BSD-2-Clause
 cmake_minimum_required(VERSION 3.22)
-project(plasma-sticky-note-tabs VERSION 0.1.0 LANGUAGES CXX)
+project(plasma-sticky-note-tabs VERSION 0.2.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -14,7 +14,7 @@ include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 
 find_package(Qt6 6.10 REQUIRED COMPONENTS Core Gui Qml Quick)
-find_package(KF6 6.26 REQUIRED COMPONENTS Config CoreAddons I18n KIO Svg)
+find_package(KF6 6.26 REQUIRED COMPONENTS Config CoreAddons I18n Svg)
 find_package(Plasma 6.7 REQUIRED)
 
 add_subdirectory(applets/notes)
@@ -27,5 +27,5 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
-install(FILES README.md DESTINATION ${KDE_INSTALL_DOCBUNDLEDIR}/plasma-sticky-note-tabs)
+install(FILES README.md DESTINATION ${KDE_INSTALL_DATADIR}/doc/plasma-sticky-note-tabs)
 install(DIRECTORY LICENSES DESTINATION ${KDE_INSTALL_DATADIR}/licenses/plasma-sticky-note-tabs)

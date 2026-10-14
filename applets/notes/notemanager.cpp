@@ -9,6 +9,7 @@
 
 #include <QDebug>
 #include <QMutex>
+#include <QPointer>
 #include <QQmlEngine>
 
 #include "filesystemnoteloader.h"
@@ -20,17 +21,49 @@ NoteManager::NoteManager(QObject *parent)
 {
 }
 
-Note *NoteManager::loadNote(const QString &id, uint appletId)
+namespace
 {
-    Note *note = m_backend->loadNote(id, appletId);
-    QQmlEngine::setObjectOwnership(note, QQmlEngine::JavaScriptOwnership);
+QHash<QString, QPointer<Note>> liveNotes;
+}
+
+Note *NoteManager::loadNote(const QString &id)
+{
+    auto *note = m_backend->loadNote(id);
+    note->setParent(this);
+    liveNotes.insert(note->id(), note);
+    connect(note, &QObject::destroyed, [id] {
+        if (liveNotes.value(id).isNull())
+            liveNotes.remove(id);
+    });
     return note;
 }
 
-void NoteManager::deleteNoteResources(const QString &id)
+Note *NoteManager::createNote(const QString &text)
 {
-    m_backend->deleteNoteResources(id);
+    auto *note = m_backend->createNote(text);
+    if (note) {
+        note->setParent(this);
+        liveNotes.insert(note->id(), note);
+        const auto id = note->id();
+        connect(note, &QObject::destroyed, [id] {
+            if (liveNotes.value(id).isNull())
+                liveNotes.remove(id);
+        });
+    }
+    return note;
 }
+
+Note *NoteManager::copyNote(const QString &id)
+{
+    // A live source may contain edits whose debounce has not yet fired.
+    if (auto note = liveNotes.value(id); note && note->ready()) {
+        return createNote(note->noteText());
+    }
+    std::unique_ptr<Note> source(m_backend->loadNote(id));
+    return source->ready() ? createNote(source->noteText()) : nullptr;
+}
+
+QStringList NoteManager::allNoteIds() { return m_backend->allNoteIds(); }
 
 QSharedPointer<AbstractNoteLoader> NoteManager::loadBackend()
 {

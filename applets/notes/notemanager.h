@@ -5,44 +5,24 @@
  *
  */
 
-#ifndef NOTEMANAGER_H
-#define NOTEMANAGER_H
-
-#include <QObject>
-#include <QPointer>
-#include <QSharedPointer>
-#include <qqmlregistration.h>
-
+#pragma once
 #include "abstractnoteloader.h"
+#include <QObject>
+#include <QSharedPointer>
 class Note;
 
+// Retains the upstream shared filesystem backend. TabModel owns returned notes.
 class NoteManager : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT
-
 public:
     explicit NoteManager(QObject *parent = nullptr);
-
-    /**
-     * Loads the note for the ID given
-     * Ownership is passed to the QML context
-     */
-    Q_INVOKABLE Note *loadNote(const QString &id, uint appletId);
-
-    /**
-     * Remove any resources associated with the note ID
-     */
-    Q_INVOKABLE void deleteNoteResources(const QString &id);
-
-    // LATER QAbstractListModel* notesModel(); //list of all notes
+    Note *loadNote(const QString &id);
+    Note *createNote(const QString &text = { });
+    Note *copyNote(const QString &id);
+    QStringList allNoteIds();
 
 private:
-    // ref count backends so that we only have for all notes
     static QSharedPointer<AbstractNoteLoader> loadBackend();
-
     QSharedPointer<AbstractNoteLoader> m_backend;
-    QWeakPointer<Note> m_lastNote;
 };
-
-#endif // NOTEMANAGER_H

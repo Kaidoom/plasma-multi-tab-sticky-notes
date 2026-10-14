@@ -8,26 +8,41 @@
 #include "note.h"
 
 Note::Note(const QString &id)
-    : QObject()
-    , m_id(id)
+    : m_id(id)
 {
 }
 
-QString Note::id() const
+void Note::edit(const QString &text)
 {
-    return m_id;
-}
-
-void Note::setNoteText(const QString &text)
-{
-    if (text == m_noteText) {
+    if (!m_ready || text == m_text)
         return;
-    }
-    m_noteText = text;
+    m_text = text;
+    m_dirty = true;
+    Q_EMIT stateChanged();
     Q_EMIT noteTextChanged();
 }
 
-QString Note::noteText() const
+void Note::loaded(const QString &text)
 {
-    return m_noteText;
+    const bool changed = text != m_text;
+    m_text = text;
+    m_dirty = false;
+    m_ready = true;
+    m_error.clear();
+    Q_EMIT stateChanged();
+    if (changed)
+        Q_EMIT noteTextChanged();
+}
+
+void Note::saved()
+{
+    m_dirty = false;
+    m_error.clear();
+    Q_EMIT stateChanged();
+}
+
+void Note::setError(const QString &message)
+{
+    m_error = message;
+    Q_EMIT stateChanged();
 }

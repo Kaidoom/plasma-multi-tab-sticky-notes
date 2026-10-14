@@ -18,12 +18,12 @@ class FileSystemNoteLoader : public AbstractNoteLoader
 public:
     explicit FileSystemNoteLoader();
     QStringList allNoteIds() override;
-    Note *loadNote(const QString &id, uint appletId) override;
-    void deleteNoteResources(const QString &id) override;
+    Note *loadNote(const QString &id) override;
+    Note *createNote(const QString &text) override;
+    static bool validId(const QString &id);
 
 private:
     QDir m_notesDir;
-    QHash<QString, uint> m_idToApplet;
 };
 
 #endif // FILESYSTEMNOTEMANAGER_H

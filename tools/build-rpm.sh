@@ -11,3 +11,7 @@ git archive --format=tar --prefix="plasma-sticky-note-tabs-$version/" HEAD \
 cp packaging/plasma-sticky-note-tabs.spec dist/rpmbuild/SPECS/
 rpmbuild -ba --define "_topdir $root/dist/rpmbuild" \
   dist/rpmbuild/SPECS/plasma-sticky-note-tabs.spec
+
+arch=$(rpm --eval '%{_arch}')
+cp "dist/rpmbuild/RPMS/$arch/plasma-sticky-note-tabs-$version-"*."$arch".rpm dist/
+printf 'RPM: %s/dist/plasma-sticky-note-tabs-%s-*.%s.rpm\n' "$root" "$version" "$arch"

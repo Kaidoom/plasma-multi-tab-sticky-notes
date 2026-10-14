@@ -1,0 +1,6 @@
+BasedOnStyle: WebKit
+IndentWidth: 4
+ColumnLimit: 140
+BreakBeforeBraces: Linux
+PointerAlignment: Right
+ReferenceAlignment: Right

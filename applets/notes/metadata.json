@@ -55,7 +55,7 @@
         "License": "GPL-2.0+",
         "Name": "Sticky Note Tabs",
         "Website": "https://kde.org/plasma-desktop/",
-        "Version": "0.1.0"
+        "Version": "0.2.0"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
     "X-Plasma-DropMimeTypes": [
