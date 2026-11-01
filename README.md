@@ -41,7 +41,8 @@ Also needed: Git, Ninja (or another CMake build tool), GNU Gettext (`msgfmt`),
 and the KF6 Kirigami, KDeclarative and KCMUtils QML runtime modules.
 
 - **Desktop tested:** Fedora KDE 44 with Plasma 6.7.5, Qt 6.11.2 and Frameworks
-  6.31.0 on Wayland.
+  6.31.0 on Wayland. Plasma 6.8.2 also passes the regression suite and private
+  Wayland desktop/panel restart tests on Fedora 44.
 - **Build/install tested:** Arch container with libplasma 6.7.5, Qt 6.12.0 and
   Frameworks 6.31.0, including Qt plugin discovery and uninstall. Desktop runtime
   is untested.
@@ -115,7 +116,7 @@ Alternatively to source installation, build an RPM from the current Git commit:
 ```sh
 sudo dnf install rpm-build
 ./tools/build-rpm.sh
-sudo dnf install ./dist/plasma-sticky-note-tabs-0.3.1-1.*.rpm
+sudo dnf install ./dist/plasma-sticky-note-tabs-0.3.2-1.*.rpm
 ```
 
 Use the same RPM steps for updates. To uninstall the RPM:
@@ -124,8 +125,10 @@ Use the same RPM steps for updates. To uninstall the RPM:
 sudo dnf remove plasma-sticky-note-tabs
 ```
 
-The RPM uses Fedora's standard Qt plugin directory. The optional preview tool
-is in `plasma-sdk`.
+The 0.3.2 RPM requires Plasma 6.8.2 or newer with `libPlasma.so.8`, and uses
+Fedora's standard Qt plugin directory. Compiled RPMs must be rebuilt when the
+Plasma or Qt ABI changes; source builds use the libraries installed on the
+build system. The optional preview tool is in `plasma-sdk`.
 
 ### Arch Linux
 

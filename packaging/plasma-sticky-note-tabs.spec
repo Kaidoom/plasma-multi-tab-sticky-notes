@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Plasma Tabbed Notes contributors
 # SPDX-License-Identifier: BSD-2-Clause
 Name:           plasma-sticky-note-tabs
-Version:        0.3.1
+Version:        0.3.2
 Release:        1%{?dist}
 Summary:        Plasma Tabbed Notes, a KDE Plasma 6 sticky note widget with tabs
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND LGPL-2.0-or-later AND BSD-3-Clause AND BSD-2-Clause AND CC0-1.0 AND (GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL) AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL)
@@ -18,8 +18,9 @@ BuildRequires:  cmake(KF6Config) >= 6.26
 BuildRequires:  cmake(KF6CoreAddons) >= 6.26
 BuildRequires:  cmake(KF6I18n) >= 6.26
 BuildRequires:  cmake(KF6Svg) >= 6.26
-BuildRequires:  cmake(Plasma) >= 6.7
-Requires:       plasma-workspace >= 6.7
+BuildRequires:  cmake(Plasma) >= 6.8.2
+Requires:       plasma-workspace >= 6.8.2
+Requires:       libplasma%{?_isa} >= 6.8.2
 Requires:       kf6-kirigami
 Requires:       kf6-kdeclarative
 Requires:       kf6-kcmutils
@@ -45,6 +46,10 @@ and separate note storage. KDE's original Sticky Note remains available.
 %license %{_datadir}/licenses/plasma-sticky-note-tabs/
 
 %changelog
+* Sun Nov 01 2026 Plasma Tabbed Notes contributors - 0.3.2-1
+- Rebuild for Plasma 6.8.2 and the libPlasma.so.8 ABI.
+- Keep the existing plugin identity, settings and note storage format.
+
 * Wed Oct 14 2026 Plasma Tabbed Notes contributors - 0.3.1-1
 - Confirm tab closure inside the widget and cancel pending closure when hidden.
 

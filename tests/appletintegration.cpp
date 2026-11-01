@@ -7,6 +7,7 @@
 #include <Plasma/Corona>
 #include <Plasma/PluginLoader>
 #include <PlasmaQuick/AppletQuickItem>
+#include <plasma_version.h>
 #include <QAbstractItemModelTester>
 #include <QApplication>
 #include <QClipboard>
@@ -25,13 +26,18 @@
 #include <QTest>
 #include <QTextDocument>
 #include <QWheelEvent>
+#include <utility>
 
 using namespace Qt::StringLiterals;
 
 class TestCorona : public Plasma::Corona
 {
 public:
+#if PLASMA_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    QRect screenGeometry(uint) const override { return { 0, 0, 1024, 768 }; }
+#else
     QRect screenGeometry(int) const override { return { 0, 0, 1024, 768 }; }
+#endif
 };
 
 static QList<QQuickItem *> visualItems(QQuickItem *root, const QString &name)
@@ -101,8 +107,14 @@ struct Harness {
     }
     void load(uint id = 0, const QString &state = { }, const QString &legacyId = { })
     {
-        applet = Plasma::PluginLoader::self()->loadApplet(u"dev.kaidoom.tabbednotes"_s, id);
+        auto loadedApplet = Plasma::PluginLoader::self()->loadApplet(u"dev.kaidoom.tabbednotes"_s, id);
+#if PLASMA_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+        applet = loadedApplet.get();
+        containment->addApplet(std::move(loadedApplet));
+#else
+        applet = loadedApplet;
         containment->addApplet(applet);
+#endif
         if (!state.isEmpty()) {
             applet->configScheme()->findItemByName(u"tabState"_s)->setProperty(state);
             applet->configuration()->insert(u"tabState"_s, state);
